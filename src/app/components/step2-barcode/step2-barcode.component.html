@@ -1,0 +1,114 @@
+<div class="barcode-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ translationService.translate('step2.title') }}</mat-card-title>
+      <mat-card-subtitle>{{ translationService.translate('step2.subtitle') }}</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab [label]="translationService.translate('step2.camera')">
+          <div class="camera-container">
+            <div *ngIf="!isCameraActive && !scanResult" class="camera-placeholder">
+              <button mat-raised-button color="primary" (click)="startCamera()">
+                <mat-icon>camera_alt</mat-icon>
+                {{ translationService.translate('step2.camera') }}
+              </button>
+            </div>
+            
+            <div *ngIf="isCameraActive" class="video-container">
+              <video #videoElement autoplay playsinline></video>
+              <div class="scanner-overlay">
+                <div class="scanner-line"></div>
+              </div>
+            </div>
+            
+            <div *ngIf="isScanning && isCameraActive" class="scanning-indicator">
+              <mat-spinner diameter="30"></mat-spinner>
+              <span>{{ translationService.translate('step2.scanning') }}</span>
+            </div>
+          </div>
+        </mat-tab>
+        
+        <mat-tab [label]="translationService.translate('step2.file')">
+          <div class="upload-container">
+            <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+            
+            <div *ngIf="!selectedImage && !scanResult" class="upload-placeholder">
+              <button mat-raised-button color="primary" (click)="triggerFileInput()">
+                <mat-icon>file_upload</mat-icon>
+                {{ translationService.translate('step2.upload') }}
+              </button>
+            </div>
+            
+            <div *ngIf="selectedImage" class="image-preview">
+              <img [src]="selectedImage" alt="Imagen seleccionada">
+            </div>
+            
+            <div *ngIf="isScanning && !isCameraActive" class="scanning-indicator">
+              <mat-spinner diameter="30"></mat-spinner>
+              <span>{{ translationService.translate('step2.scanning') }}</span>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+      
+      <div *ngIf="scanError" class="error-message">
+        <mat-icon color="warn">error</mat-icon>
+        <span>{{ scanError }}</span>
+        <div class="error-actions">
+           <button mat-button color="primary" (click)="startCamera()" *ngIf="scanError.includes('cámara') || scanError.includes('dispositivos')">
+             <mat-icon>refresh</mat-icon>
+             Reintentar cámara
+           </button>
+           <button mat-button color="primary" (click)="triggerFileInput()" *ngIf="scanError.includes('imagen') || scanError.includes('código de barras')">
+             <mat-icon>file_upload</mat-icon>
+             Probar otra imagen
+           </button>
+         </div>
+         
+         <!-- Consejos para mejorar la detección -->
+         <div class="tips-container" *ngIf="scanError.includes('imagen') || scanError.includes('código de barras')">
+           <h4>Consejos para mejorar la detección:</h4>
+           <ul>
+             <li>Asegúrate de que el código PDF417 esté completamente visible</li>
+             <li>La imagen debe tener buena iluminación y estar enfocada</li>
+             <li>Evita reflejos o sombras sobre el código</li>
+             <li>El código debe ocupar una parte significativa de la imagen</li>
+             <li>Intenta tomar la foto desde un ángulo perpendicular al código</li>
+           </ul>
+         </div>
+      </div>
+      
+      <div *ngIf="scanResult" class="result-container">
+        <h3>{{ translationService.translate('step2.success') }}</h3>
+        <!-- <div class="result-data">
+          <pre>{{ scanResult }}</pre>
+        </div> -->
+        <div class="recapture-actions">
+          <button mat-raised-button color="accent" (click)="resetCapture()">
+            <mat-icon>refresh</mat-icon>
+            {{ translationService.translate('step2.recapture') }}
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+    
+    <mat-card-actions class="main-actions">
+      <button mat-button (click)="goBack()">
+        {{ translationService.translate('nav.previous') }}
+      </button>
+      <span class="spacer"></span>
+      <button mat-raised-button color="primary" [disabled]="!scanResult" (click)="saveAndContinue()">
+        {{ translationService.translate('nav.next') }}
+      </button>
+    </mat-card-actions>
+    
+    <mat-card-actions class="restart-action">
+      <button mat-raised-button color="warn" (click)="confirmRestart()">
+        <mat-icon>refresh</mat-icon>
+        {{ translationService.translate('nav.restart') }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

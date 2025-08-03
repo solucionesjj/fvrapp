@@ -1,0 +1,129 @@
+<div class="summary-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ translationService.translate('step4.title') }}</mat-card-title>
+      <mat-card-subtitle>{{ translationService.translate('step4.subtitle') }}</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content *ngIf="userData">
+
+            <!-- <mat-divider></mat-divider> -->
+      
+      <div class="section">
+        <!-- <h3>{{ translationService.translate('step4.form_section') }}</h3> -->
+        <div class="form-answers">
+          <table>
+            <tr>
+              <td>{{ translationService.translate('step3.question1.text') }}</td>
+              <td class="grayText"><strong>{{ getYesNoText(userData.question1) }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step3.question2.text') }}</td>
+              <td class="grayText"><strong>{{ getYesNoText(userData.question2) }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step3.question3.text') }}</td>
+              <td class="grayText"><strong>{{ getYesNoText(userData.question3) }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.county_label') }}</td>
+              <td class="grayText"><strong> {{ userData.countyOfResidence || translationService.translate('step4.not_specified') }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.name') }}</td>
+              <td class="grayText"><strong> {{ userData.firstName + ' ' +userData.secondName}}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.surnames') }}</td>
+              <td class="grayText"><strong> {{ userData.surnames }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.dateOfBirth') }}</td>
+              <td class="grayText"><strong> {{ formatDateDDMMYYYYtoDDMMMYYYY(userData.dateOfBirth) }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.gender') }}</td>
+              <td class="grayText"><strong> {{ gender(userData.Sex) }}</strong></td>  
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.city') }}</td>
+              <td class="grayText"><strong> {{ userData.city }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.county') }}</td>
+              <td class="grayText"><strong> {{ userData.countyOfResidence }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.postalCode') }}</td>
+              <td class="grayText"><strong> {{ userData.postalCode }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.address') }}</td>
+              <td class="grayText"><strong> {{ userData.address }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.email') }}</td>
+              <td class="grayText"><strong> {{ userData.email }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.phoneNumber') }}</td>
+              <td class="grayText"><strong> {{ userData.phoneNumber }}</strong></td>
+            </tr>                        
+            <tr>
+              <td>{{ translationService.translate('step4.driverLicense') }}</td>
+              <td class="grayText"><strong> {{ userData.licenseCode }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.consent_label') }}</td>
+              <td class="grayText"><strong> {{ getYesNoText(userData.consent) }}</strong></td>
+            </tr>
+            <tr>
+              <td>{{ translationService.translate('step4.signature_label') }}</td>
+              <td><div class="signature-preview" *ngIf="userData.signature">
+                <img [src]="userData.signature"  alt="{{ translationService.translate('step4.signature_label') }}">
+              </div>     
+            </td>
+            </tr>                                                
+          </table>
+        </div>
+      </div>
+
+
+      
+      <!-- <mat-divider></mat-divider> -->
+      
+
+      
+
+      
+      <div *ngIf="!isDataComplete()" class="warning-message">
+        <p>{{ translationService.translate('step4.incomplete_warning') }}</p>
+      </div>
+    </mat-card-content>
+    
+    <mat-card-content *ngIf="!userData">
+      <div class="no-data-message">
+        <p>{{ translationService.translate('step4.no_data') }}</p>
+      </div>
+    </mat-card-content>
+    
+    <mat-progress-bar *ngIf="isSubmitting" mode="indeterminate"></mat-progress-bar>
+    
+    <mat-card-actions class="main-actions">
+      <button mat-button [disabled]="isSubmitting" (click)="goBack()">
+        {{ translationService.translate('nav.previous') }}
+      </button>
+      <span class="spacer"></span>
+      <button mat-raised-button color="primary" (click)="submitData()">
+        {{ translationService.translate('step4.generate_pdf') }}
+      </button>
+    </mat-card-actions>
+    
+    <mat-card-actions class="restart-action">
+      <button mat-raised-button color="warn" (click)="confirmRestart()">
+        <mat-icon>refresh</mat-icon>
+        {{ translationService.translate('nav.restart') }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

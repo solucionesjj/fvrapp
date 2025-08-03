@@ -1,0 +1,104 @@
+.summary-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section {
+  margin: 20px 0;
+  padding: 10px 0;
+}
+
+.signature-preview {
+  max-width: 250px;
+  margin: 15px 0;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.signature-preview img {
+  max-width: 100%;
+  height: auto;
+}
+
+.barcode-data {
+  margin: 15px 0;
+}
+
+td, th {
+  padding: 4px;
+}
+
+.data-preview {
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.grayText {
+  color: #757575;
+}
+
+.form-answers {
+  margin: 15px 0;
+}
+
+.form-answers p {
+  margin: 8px 0;
+}
+
+.warning-message {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff3e0;
+  border-left: 4px solid #ff9800;
+  border-radius: 4px;
+}
+
+.no-data-message {
+  margin: 30px 0;
+  padding: 20px;
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+mat-card-actions.main-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: none;
+}
+
+mat-card-actions.restart-action {
+  display: flex;
+  justify-content: center;
+  padding: 8px 16px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 0;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Estilos para dispositivos táctiles */
+@media (max-width: 768px) {
+  .summary-container {
+    padding: 10px;
+  }
+  
+  .section {
+    margin: 15px 0;
+  }
+  
+  .data-preview {
+    max-height: 120px;
+  }
+}

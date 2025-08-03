@@ -1,0 +1,63 @@
+/* Estilos globales para la aplicación */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: var(--primary-color);
+  color: var(--light-text);
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.app-content {
+  flex: 1;
+  padding: 20px;
+  background-color: var(--background-color);
+}
+
+.app-footer {
+  background-color: var(--primary-color);
+  color: var(--light-text);
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Estilos para dispositivos táctiles */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 12px;
+  }
+  
+  .header-content {
+    flex-direction: row;
+    gap: 16px;
+  }
+  
+  .app-header h1 {
+    font-size: 18px;
+    flex: 1;
+  }
+  
+  .app-content {
+    padding: 10px;
+  }
+}

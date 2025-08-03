@@ -1,0 +1,43 @@
+<div class="signature-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ translationService.translate('step1.title') }}</mat-card-title>
+      <mat-card-subtitle>{{ translationService.translate('step1.subtitle') }}</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="signature-pad-container">
+        <div class="signature-label">{{ translationService.translate('step1.signature') }}</div>
+        <div class="canvas-container">
+          <canvas #signatureCanvas></canvas>
+        </div>
+        <div *ngIf="signatureError" class="error-message">
+          {{ translationService.translate('step1.error') }}
+        </div>
+        <button mat-raised-button color="warn" (click)="clearSignature()">
+          {{ translationService.translate('step1.clear') }}
+        </button>
+      </div>
+      
+      <div class="consent-container">
+        <mat-checkbox [(ngModel)]="consent" color="primary">
+          {{ translationService.translate('step1.consent') }}
+        </mat-checkbox>
+      </div>
+    </mat-card-content>
+    
+    <mat-card-actions class="main-actions">
+      <span class="spacer"></span>
+      <button mat-raised-button color="primary" [disabled]="!consent || isSignatureEmptyFlag" (click)="saveAndContinue()">
+        {{ translationService.translate('nav.next') }}
+      </button>
+    </mat-card-actions>
+    
+    <mat-card-actions class="restart-action">
+      <button mat-raised-button color="warn" (click)="confirmRestart()">
+        <mat-icon>refresh</mat-icon>
+        {{ translationService.translate('nav.restart') }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

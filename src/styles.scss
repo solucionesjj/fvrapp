@@ -1,0 +1,169 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importar estilos de Angular Material */
+@use '@angular/material' as mat;
+
+/* Incluir los temas predefinidos de Angular Material */
+@include mat.core();
+
+/* Crear el tema usando CSS variables para Angular Material 20.x */
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    use-system-variables: true,
+    system-variables-prefix: sys
+  ),
+  density: (
+    scale: 0
+  )
+));
+
+/* Definir variables CSS para el tema - Paleta Azul Moderna */
+:root {
+  --sys-primary: #1976d2; /* Blue 700 - Azul principal moderno */
+  --sys-on-primary: #ffffff;
+  --sys-primary-container: #e3f2fd; /* Blue 50 - Contenedor azul claro */
+  --sys-on-primary-container: #0d47a1; /* Blue 900 - Texto en contenedor */
+  
+  --sys-secondary: #42a5f5; /* Blue 400 - Azul secundario más claro */
+  --sys-on-secondary: #ffffff;
+  --sys-secondary-container: #e1f5fe; /* Light Blue 50 */
+  --sys-on-secondary-container: #01579b; /* Light Blue 900 */
+  
+  --sys-tertiary: #26c6da; /* Cyan 400 - Acento cyan moderno */
+  --sys-on-tertiary: #ffffff;
+  --sys-tertiary-container: #e0f7fa; /* Cyan 50 */
+  --sys-on-tertiary-container: #006064; /* Cyan 900 */
+  
+  --sys-error: #f44336; /* Red 500 - Mantener rojo para errores */
+  --sys-on-error: #ffffff;
+  --sys-error-container: #ffebee; /* Red 50 */
+  --sys-on-error-container: #b71c1c; /* Red 900 */
+  
+  --sys-background: #f8faff; /* Fondo azul muy claro */
+  --sys-on-background: #1a1c1e;
+  --sys-surface: #ffffff;
+  --sys-on-surface: #1a1c1e;
+  --sys-surface-variant: #f1f4f8; /* Variante de superficie con tinte azul */
+  --sys-on-surface-variant: #424242;
+  --sys-outline: #90a4ae; /* Blue Grey 300 */
+  --sys-outline-variant: #cfd8dc; /* Blue Grey 100 */
+}
+
+/* Aplicar el tema a los componentes */
+@include mat.all-component-themes($theme);
+
+/* Estilos globales */
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+body { 
+  margin: 0; 
+  padding: 0;
+  background-color: #f8faff; /* Fondo azul muy claro que coincide con el tema */
+  color: #1a1c1e; /* Color de texto que coincide con el tema */
+}
+
+/* Estilos para botones de navegación */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Estilos modernos adicionales */
+.mat-mdc-card {
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.1) !important;
+  border-radius: 12px !important;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.mat-mdc-card:hover {
+  box-shadow: 0 8px 24px rgba(25, 118, 210, 0.15) !important;
+  transform: translateY(-2px);
+}
+
+.mat-mdc-raised-button {
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.mat-mdc-raised-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3) !important;
+}
+
+/* Efectos de gradiente sutil para botones primarios */
+.mat-mdc-raised-button.mat-primary {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%) !important;
+  color: #ffffff !important;
+}
+
+/* Mejorar contraste en botones activos y estados especiales */
+.mat-mdc-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-raised-button.mat-primary {
+  color: #ffffff !important;
+}
+
+.mat-mdc-button.mat-primary:hover,
+.mat-mdc-unelevated-button.mat-primary:hover,
+.mat-mdc-raised-button.mat-primary:hover {
+  background-color: #1565c0 !important;
+  color: #ffffff !important;
+}
+
+/* Botones con estado activo/seleccionado */
+.mat-mdc-button.mat-primary.active,
+.mat-mdc-unelevated-button.mat-primary.active,
+.mat-mdc-raised-button.mat-primary.active {
+  background-color: #0d47a1 !important;
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+/* Botones de texto primarios */
+.mat-mdc-button.mat-primary {
+  color: #1976d2 !important;
+}
+
+.mat-mdc-button.mat-primary:hover {
+  background-color: rgba(25, 118, 210, 0.08) !important;
+  color: #1565c0 !important;
+}
+
+/* Asegurar contraste en iconos */
+.mat-mdc-button.mat-primary .mat-icon,
+.mat-mdc-unelevated-button.mat-primary .mat-icon,
+.mat-mdc-raised-button.mat-primary .mat-icon {
+  color: inherit;
+}
+
+/* Estilos para dispositivos táctiles */
+@media (max-width: 768px) {
+  .mat-button, .mat-raised-button, .mat-stroked-button, .mat-flat-button {
+    min-width: 64px;
+    line-height: 36px;
+    padding: 0 16px;
+  }
+  
+  .nav-buttons {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .nav-buttons button {
+    flex: 1 0 auto;
+  }
+  
+  .mat-mdc-card:hover {
+    transform: none; /* Desactivar hover en móviles */
+  }
+}

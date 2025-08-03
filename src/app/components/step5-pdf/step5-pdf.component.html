@@ -1,0 +1,48 @@
+<div class="pdf-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ translationService.translate('step5.title') }}</mat-card-title>
+      <mat-card-subtitle>{{ translationService.translate('step5.subtitle') }}</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-progress-bar *ngIf="isGeneratingPdf" mode="indeterminate"></mat-progress-bar>
+    
+    <mat-card-content>
+      <div class="success-message">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <h2>{{ translationService.translate('step5.success_title') }}</h2>
+        <p>{{ translationService.translate('step5.success_message') }}</p>
+      </div>
+      
+
+      
+      <div class="pdf-preview" *ngIf="pdfUrl">
+        <h3>{{ translationService.translate('step5.pdf_title') }}</h3>
+        <p>{{ translationService.translate('step5.pdf_description') }}</p>
+        
+        <div class="pdf-actions">
+          <button mat-raised-button color="primary" (click)="downloadPdf()">
+            <mat-icon>download</mat-icon>
+            {{ translationService.translate('step5.download') }}
+          </button>
+          
+          <a [href]="pdfUrl" target="_blank" mat-raised-button>
+            <mat-icon>visibility</mat-icon>
+            {{ translationService.translate('step5.view') }}
+          </a>
+        </div>
+      </div>
+      
+      <div class="error-message" *ngIf="!userData">
+        <p>{{ translationService.translate('step5.error') }}</p>
+      </div>
+    </mat-card-content>
+    
+    <mat-card-actions class="restart-action">
+      <button mat-raised-button color="warn" (click)="confirmRestart()">
+        <mat-icon>refresh</mat-icon>
+        {{ translationService.translate('common.restart') }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

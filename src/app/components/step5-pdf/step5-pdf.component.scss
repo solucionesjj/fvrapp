@@ -1,0 +1,77 @@
+.pdf-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.success-message {
+  text-align: center;
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #f1f8e9;
+  border-radius: 8px;
+}
+
+.success-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  color: #4caf50;
+  margin-bottom: 16px;
+}
+
+.pdf-preview {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.pdf-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.error-message {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #ffebee;
+  border-radius: 8px;
+  text-align: center;
+}
+
+
+
+mat-card-actions.restart-action {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 0;
+}
+
+/* Estilos para dispositivos táctiles */
+@media (max-width: 768px) {
+  .pdf-container {
+    padding: 10px;
+  }
+  
+  .pdf-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .pdf-actions button,
+  .pdf-actions a {
+    width: 100%;
+  }
+  
+  .success-message,
+  .pdf-preview,
+  .error-message {
+    margin: 20px 0;
+    padding: 15px;
+  }
+}
