@@ -87,37 +87,35 @@ export class Step5PdfComponent implements OnInit {
       const normalSize = 12;
 
 
-      // Print X on US Citizen question
+      // Print X on US Citizen
       var temporalX = 0;
       if(this.userData.question1) {
-        temporalX = 236;
+        temporalX = 266;
       } else {
-        temporalX = 273;
+        temporalX = 340;
       }
       page.drawText(this.sanitizeTextForPdf('X'), {
         x: temporalX,
-        y: 440,
+        y: 411,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
-      // Print X on convicted felon question
       if(this.userData.question2) {
       page.drawText(this.sanitizeTextForPdf('X'), {
-        x: 52,
-        y: 425,
+        x: 43,
+        y: 394,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       }
 
-      // Print X on mentally incapacited question
       if(this.userData.question3) {
       page.drawText(this.sanitizeTextForPdf('X'), {
-        x: 52,
-        y: 400,
+        x: 43,
+        y: 374,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
@@ -127,164 +125,162 @@ export class Step5PdfComponent implements OnInit {
       
       // Print Date of Birth
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(0, 1)), {
-        x: 49,
-        y:  360 ,
+        x: 190,
+        y: 351,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(1, 2)), {
-        x: 69,
-        y:  360 ,
+        x: 207,
+        y: 351,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(2, 3)), {
-        x: 89,
-        y:  360 ,
+        x: 247,
+        y: 351,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(3, 4)), {
-        x: 106,
-        y:  360 ,
+        x: 269,
+        y: 351,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(4, 5)), {
-        x: 129,
-        y:  360 ,
+        x: 317,
+        y: 351,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(5, 6)), {
-        x: 146,
-        y:  360 ,
+        x: 337,
+        y: 351,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(6, 7)), {
-        x: 163,
-        y:  360 ,
+        x: 360,
+        y: 351,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(7, 8)), {
-        x: 180,
-        y:  360 ,
+        x: 380,
+        y: 351,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });      
 
-
-
       // Print Florida Driver License
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(0, 1)), {
-        x: 204,
-        y: 360,
+        x: 48,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(1, 2)), {
-        x: 224,
-        y: 360,
+        x: 68,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(2, 3)), {
-        x: 239,
-        y: 360,
+        x: 88,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(3, 4)), {
-        x: 258,
-        y: 360,
+        x: 111,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(4, 5)), {
-        x: 276,
-        y: 360,
+        x: 150,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(5, 6)), {
-        x: 295,
-        y: 360,
+        x: 173,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(6, 7)), {
-        x: 315,
-        y: 360,
+        x: 193,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(7, 8)), {
-        x: 334,
-        y: 360,
+        x: 235,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(8, 9)), {
-        x: 351,
-        y: 360,
+        x: 255,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(9, 10)), {
-        x: 374,
-        y: 360,
+        x: 298,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(10, 11)), {
-        x: 391,
-        y: 360,
+        x: 317,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(11, 12)), {
-        x: 408,
-        y: 360,
+        x: 337,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(12, 13)), {
-        x: 431,
-        y: 360,
+        x: 380,
+        y: 306,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
@@ -294,7 +290,7 @@ export class Step5PdfComponent implements OnInit {
       // Print Surnames
       page.drawText(this.sanitizeTextForPdf(this.userData.surnames), {
         x: 48,
-        y: 329,
+        y: 281,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
@@ -302,8 +298,8 @@ export class Step5PdfComponent implements OnInit {
 
        // Print Names
       page.drawText(this.sanitizeTextForPdf(this.userData.firstName + ' ' + this.userData.secondName), {
-        x: 252,
-        y: 329,
+        x: 266,
+        y: 281,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
@@ -312,8 +308,8 @@ export class Step5PdfComponent implements OnInit {
        // Print Name Suffix
        if(this.userData.Sex === '1' || this.userData.Sex === '2') {
         page.drawText(this.sanitizeTextForPdf(this.userData.Sex === '1' ? 'MR.' : 'MS.'), {
-          x: 539,
-          y: 329,
+          x: 564,
+          y: 281,
           size: normalSize,
           font: boldFont,
           color: rgb(0, 0, 0)
@@ -323,7 +319,7 @@ export class Step5PdfComponent implements OnInit {
        // Print Address
       page.drawText(this.sanitizeTextForPdf(this.userData.address), {
         x: 48,
-        y: 306,
+        y: 261,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
@@ -331,31 +327,27 @@ export class Step5PdfComponent implements OnInit {
 
        // Print City
       page.drawText(this.sanitizeTextForPdf(this.userData.city), {
-        x: 371,
-        y: 306,
-        // size: normalSize,
-        size: 9,
+        x: 323,
+        y: 261,
+        size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });    
 
       // Print County
       page.drawText(this.sanitizeTextForPdf(this.userData.countyOfResidence), {
-        x: 451,
-        y: 306,
-        maxWidth: 77,
-        // size: normalSize,
-        size: 9,
+        x: 448,
+        y: 261,
+        size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       // Print Postal Code
       page.drawText(this.sanitizeTextForPdf(this.userData.postalCode), {
-        x: 530,
-        y: 306,
-        // size: normalSize,
-        size: 9,
+        x: 524,
+        y: 261,
+        size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });   
@@ -364,13 +356,13 @@ export class Step5PdfComponent implements OnInit {
       if(this.userData.Sex === '1' || this.userData.Sex === '2') {
         var temporalX = 0;
         if(this.userData.Sex === '1') {
-          temporalX = 450;
+          temporalX = 264;
         } else {
-          temporalX = 421;
+          temporalX = 295;
         }
         page.drawText(this.sanitizeTextForPdf('X'), {
           x: temporalX,
-          y: 230,
+          y: 190,
           size: subtitleSize,
           font: boldFont,
         color: rgb(0, 0, 0)
@@ -379,8 +371,8 @@ export class Step5PdfComponent implements OnInit {
 
     // Print Phone Number
     page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber), {
-          x: 72,
-          y: 208,
+          x: 482,
+          y: 190,
           size: subtitleSize,
           font: boldFont,
         color: rgb(0, 0, 0)
@@ -388,99 +380,100 @@ export class Step5PdfComponent implements OnInit {
 
     // Print Email
     page.drawText(this.sanitizeTextForPdf(this.userData.email), {
-          x: 255,
-          y: 208,
+          x: 311,
+          y: 173,
           size: subtitleSize,
           font: boldFont,
         color: rgb(0, 0, 0)
       });
       
-      // // Agregar firma
-      // if (this.userData.signature && this.userData.signature.trim() !== '') {
-      //   console.log('Procesando firma:', this.userData.signature.substring(0, 50) + '...');
+      // Agregar firma
+      if (this.userData.signature && this.userData.signature.trim() !== '') {
+        console.log('Procesando firma:', this.userData.signature.substring(0, 50) + '...');
         
-      //   try {
-      //     // Validar que la firma no sea una imagen vacía
-      //     if (this.isEmptySignature(this.userData.signature)) {
-      //       console.warn('Firma detectada como vacía, omitiendo...');
-      //     } else {
-      //       // Convertir la firma base64 a una imagen para el PDF
-      //       const signatureImage = await this.getImageFromBase64(this.userData.signature);
+        try {
+          // Validar que la firma no sea una imagen vacía
+          if (this.isEmptySignature(this.userData.signature)) {
+            console.warn('Firma detectada como vacía, omitiendo...');
+          } else {
+            // Convertir la firma base64 a una imagen para el PDF
+            const signatureImage = await this.getImageFromBase64(this.userData.signature);
             
-      //       // Crear una imagen temporal para validar que se puede cargar
-      //       await this.validateImageData(signatureImage);
+            // Crear una imagen temporal para validar que se puede cargar
+            await this.validateImageData(signatureImage);
             
-      //       const signatureBytes = await this.fetchWithRetry(signatureImage, 3);
+            const signatureBytes = await this.fetchWithRetry(signatureImage, 3);
             
-      //       let signatureEmbed;
-      //       try {
-      //         // Intentar primero como PNG
-      //         signatureEmbed = await pdfDoc.embedPng(signatureBytes);
-      //       } catch (pngError) {
-      //         console.warn('Error con PNG, intentando como JPEG:', pngError);
-      //         // Si falla PNG, intentar como JPEG
-      //         signatureEmbed = await pdfDoc.embedJpg(signatureBytes);
-      //       }
+            let signatureEmbed;
+            try {
+              // Intentar primero como PNG
+              signatureEmbed = await pdfDoc.embedPng(signatureBytes);
+            } catch (pngError) {
+              console.warn('Error con PNG, intentando como JPEG:', pngError);
+              // Si falla PNG, intentar como JPEG
+              signatureEmbed = await pdfDoc.embedJpg(signatureBytes);
+            }
             
-      //       // Calcular dimensiones para mantener la proporción
-      //       const dimensions = signatureEmbed.scale(0.18);
+            // Calcular dimensiones para mantener la proporción
+            const dimensions = signatureEmbed.scale(0.27);
             
-      //       page.drawImage(signatureEmbed, {
-      //         x: 85,
-      //         y: 14,
-      //         width: dimensions.width,
-      //         height: dimensions.height
-      //       });
+            page.drawImage(signatureEmbed, {
+              x: 298,
+              y: 17,
+              width: dimensions.width,
+              height: dimensions.height
+            });
             
-      //       console.log('Firma agregada exitosamente al PDF');
-      //     }
-      //   } catch (error) {
-      //     console.error('Error al procesar la firma:', error);
-      //     // Mostrar mensaje de error en el PDF
-      //     page.drawText(this.sanitizeTextForPdf('Error al cargar la firma'), {
-      //       x: 85,
-      //       y: 28,
-      //       size: normalSize,
-      //       font,
-      //       color: rgb(1, 0, 0)
-      //     });
-      //   }
-      // } else {
-      //   console.warn('No hay firma disponible para agregar al PDF');
-      // }
+            console.log('Firma agregada exitosamente al PDF');
+          }
+        } catch (error) {
+          console.error('Error al procesar la firma:', error);
+          // Mostrar mensaje de error en el PDF
+          page.drawText(this.sanitizeTextForPdf('Error al cargar la firma'), {
+            x: 298,
+            y: 37,
+            size: normalSize,
+            font,
+            color: rgb(1, 0, 0)
+          });
+        }
+      } else {
+        console.warn('No hay firma disponible para agregar al PDF');
+      }
 
-      // const now = new Date();
+      const now = new Date();
 
-      // const year = now.getFullYear();
-      // const month = now.toLocaleString('en-US', { month: 'short' });
-      // const day = String(now.getDate()).padStart(2, '0');
+      const year = now.getFullYear();
+      const month = this.translationService.getCurrentLanguage() === 'es' ? now.toLocaleString('es-ES', { month: 'short' }) : now.toLocaleString('en-US', { month: 'short' });
+      const day = String(now.getDate()).padStart(2, '0');
 
-      // let hours = now.getHours();
-      // const minutes = String(now.getMinutes()).padStart(2, '0');
-      // const ampm = hours >= 12 ? 'PM' : 'AM';
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
 
-      // hours = hours % 12;
-      // hours = hours ? hours : 12; // convierte 0 en 12
+      hours = hours % 12;
+      hours = hours ? hours : 12; // convierte 0 en 12
 
-      // const formattedDate = `${year}/${month}/${day}`;
-      // const formattedTime = `${hours}:${minutes} ${ampm}`;
+      const formattedDate = `${year}/${month}/${day}`;
+      const formattedTime = `${hours}:${minutes} ${ampm}`;
 
 
-      // // Print Date/Time of print format
-      // page.drawText(this.sanitizeTextForPdf(formattedDate), {
-      //       x: 364,
-      //       y: 34,
-      //       size: 9,
-      //       font,
-      //       color: rgb(0, 0, 0)
-      //     });
-      // page.drawText(this.sanitizeTextForPdf(formattedTime), {
-      //       x: 364,
-      //       y: 20,
-      //       size: 9,
-      //       font,
-      //       color: rgb(0, 0, 0)
-      //     });          
+      // Print Date/Time of print format
+      page.drawText(this.sanitizeTextForPdf(formattedDate), {
+            x: 539,
+            y: 43,
+            size: 9,
+            font,
+            color: rgb(0, 0, 0)
+          });
+
+      page.drawText(this.sanitizeTextForPdf(formattedTime), {
+            x: 547,
+            y: 28,
+            size: 9,
+            font,
+            color: rgb(0, 0, 0)
+          });
       
       // Serializar el PDF a bytes
       const pdfBytes = await pdfDoc.save();

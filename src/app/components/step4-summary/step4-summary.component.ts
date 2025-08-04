@@ -126,8 +126,8 @@ export class Step4SummaryComponent implements OnInit {
 
   formatDateDDMMYYYYtoDDMMMYYYY(dateStr: string) {
   // Extraer día, mes y año
-  const day = dateStr.slice(0, 2);
-  const month = dateStr.slice(2, 4);
+  const month = dateStr.slice(0, 2);
+  const day = dateStr.slice(2, 4);
   const year = dateStr.slice(4, 8);
 
   // Crear un objeto Date (meses en JavaScript van de 0 a 11)
@@ -142,6 +142,6 @@ export class Step4SummaryComponent implements OnInit {
   }
 
   // Construir la fecha formateada
-  return `${day}/${shortMonth}/${year}`;
+  return `${shortMonth}/${day}/${year}`;
 }
 }

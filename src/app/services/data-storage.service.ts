@@ -124,10 +124,11 @@ export class DataStorageService {
    */
   saveToDatabase(userData: UserData): Observable<boolean> {
     console.log('Iniciando guardado en Google Sheets:', userData);
-    userData.signature = '';
-    userData.barcode = '';
+    let userDataTemporal = JSON.parse(JSON.stringify(userData));
+    userDataTemporal.signature = '';
+    userDataTemporal.barcode = '';
     return new Observable<boolean>((observer) => {
-      this.handleGoogleSheetsOperation(userData, observer);
+      this.handleGoogleSheetsOperation(userDataTemporal, observer);
     });
   }
 
