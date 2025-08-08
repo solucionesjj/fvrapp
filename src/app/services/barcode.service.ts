@@ -150,149 +150,168 @@ export class BarcodeService {
 }
   
   /**
-   * Inicia la decodificación desde la cámara
+   * Inicia la decodificación desde la cámara con implementación simplificada
    * @param videoElement Elemento de video donde se mostrará la cámara
    */
   decodeFromCamera(videoElement: HTMLVideoElement): Observable<any> {
     return new Observable<any>(observer => {
-      let isDecoding = false;
-      let currentReader: BrowserMultiFormatReader | BrowserPDF417Reader | null = null;
+      let stream: MediaStream | null = null;
+      let scanInterval: any = null;
+      let isScanning = false;
       
-      // Primero verificamos si hay dispositivos de cámara disponibles
-      navigator.mediaDevices.enumerateDevices()
-        .then(devices => {
-          const videoDevices = devices.filter(device => device.kind === 'videoinput');
+      console.log('Iniciando captura de cámara simplificada para códigos de barras');
+      
+      // Configuración de cámara optimizada
+      const constraints = {
+        video: {
+          facingMode: 'environment', // Cámara trasera preferida
+          width: { ideal: 1920, min: 640 },
+          height: { ideal: 1080, min: 480 },
+          frameRate: { ideal: 30, min: 15 }
+        }
+      };
+      
+      // Función para capturar y analizar frame
+      const captureAndAnalyze = async () => {
+        if (!isScanning || !videoElement.videoWidth || !videoElement.videoHeight) {
+          return;
+        }
+        
+        try {
+          // Crear canvas para capturar frame
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
           
-          if (videoDevices.length === 0) {
-            observer.error(new Error('No se encontraron dispositivos de cámara disponibles'));
+          if (!ctx) {
+            console.error('No se pudo obtener contexto del canvas');
             return;
           }
           
-          // Función para intentar decodificación con PDF417 reader
-          const tryPDF417Reader = () => {
-            if (isDecoding) return;
-            isDecoding = true;
-            currentReader = this.pdf417Reader;
-            
-            console.log('Intentando con PDF417 reader optimizado para licencias de Florida...');
-            this.pdf417Reader.decodeFromConstraints(
-              {
-                video: { 
-                  facingMode: 'environment',
-                  width: { ideal: 1920, min: 1280 },
-                  height: { ideal: 1080, min: 720 },
-                  frameRate: { ideal: 30, min: 15 }
-                }
-              },
-              videoElement,
-              (result, error) => {
-                if (result) {
-                  console.log('PDF417 detectado exitosamente');
-                  isDecoding = false;
-                  observer.next(result);
-                  observer.complete();
-                  return;
-                }
-                if (error && !error.toString().includes('NotFoundException')) {
-                  console.log('PDF417 reader error, intentando con MultiFormat reader:', error.message);
-                  isDecoding = false;
-                  tryMultiFormatReader();
-                }
-              }
-            ).catch(pdf417Error => {
-              console.error('Error con PDF417 reader para licencia de Florida:', pdf417Error);
-              
-              // Mensaje específico para errores de PDF417 con licencias de Florida
-              if (pdf417Error.message?.includes('NotFoundException')) {
-                console.log('No se detecta código PDF417 en licencia de Florida');
-              }
-              
-              console.log('Intentando con MultiFormat reader como respaldo...');
-              isDecoding = false;
-              tryMultiFormatReader();
-            });
+          // Configurar canvas con dimensiones del video
+          canvas.width = videoElement.videoWidth;
+          canvas.height = videoElement.videoHeight;
+          
+          // Capturar frame actual
+          ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+          
+          // Convertir a imagen para análisis
+          const imageDataUrl = canvas.toDataURL('image/png');
+          
+          // Intentar decodificar con PDF417 primero (específico para licencias)
+           try {
+             const result = await this.pdf417Reader.decodeFromImageUrl(imageDataUrl);
+             if (result) {
+               console.log('✅ Código PDF417 detectado exitosamente');
+               cleanup();
+               observer.next(result);
+               observer.complete();
+               return;
+             }
+           } catch (pdf417Error) {
+             // Si PDF417 falla, intentar con MultiFormat
+             try {
+               const result = await this.reader.decodeFromImageUrl(imageDataUrl);
+               if (result) {
+                 console.log('✅ Código detectado con MultiFormat reader');
+                 cleanup();
+                 observer.next(result);
+                 observer.complete();
+                 return;
+               }
+             } catch (multiFormatError: any) {
+               // Errores silenciosos durante escaneo continuo
+               // Solo logear errores no relacionados con "no encontrado"
+               if (!multiFormatError.message?.includes('NotFoundException')) {
+                 console.debug('Frame sin código detectado');
+               }
+             }
+           }
+        } catch (error) {
+          console.error('Error al capturar frame:', error);
+        }
+      };
+      
+      // Función de limpieza
+      const cleanup = () => {
+        isScanning = false;
+        
+        if (scanInterval) {
+          clearInterval(scanInterval);
+          scanInterval = null;
+        }
+        
+        if (stream) {
+          stream.getTracks().forEach(track => {
+            track.stop();
+            console.log('Track detenido:', track.kind);
+          });
+          stream = null;
+        }
+        
+        if (videoElement.srcObject) {
+          videoElement.srcObject = null;
+        }
+      };
+      
+      // Iniciar cámara
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(mediaStream => {
+          stream = mediaStream;
+          videoElement.srcObject = stream;
+          
+          // Esperar a que el video esté listo
+          videoElement.onloadedmetadata = () => {
+            videoElement.play()
+              .then(() => {
+                console.log('📹 Cámara iniciada, comenzando escaneo...');
+                isScanning = true;
+                
+                // Iniciar escaneo cada 500ms (2 FPS de análisis)
+                scanInterval = setInterval(captureAndAnalyze, 500);
+              })
+              .catch(playError => {
+                console.error('Error al reproducir video:', playError);
+                observer.error(new Error('No se pudo iniciar la reproducción de video'));
+              });
           };
           
-          // Función para intentar decodificación con MultiFormat reader
-          const tryMultiFormatReader = () => {
-            if (isDecoding) return;
-            isDecoding = true;
-            currentReader = this.reader;
-            
-            console.log('Intentando con MultiFormat reader...');
-            this.reader.decodeFromConstraints(
-              {
-                video: { 
-                  facingMode: 'environment',
-                  width: { ideal: 1920, min: 1280 },
-                  height: { ideal: 1080, min: 720 },
-                  frameRate: { ideal: 30, min: 15 }
-                }
-              },
-              videoElement,
-              (result, error) => {
-                if (result) {
-                  console.log('Código detectado con MultiFormat reader');
-                  isDecoding = false;
-                  observer.next(result);
-                  observer.complete();
-                  return;
-                }
-                if (error && !error.toString().includes('NotFoundException')) {
-                  console.error('Error en decodificación MultiFormat:', error);
-                  // Reintentar con PDF417 después de un breve delay
-                  setTimeout(() => {
-                    isDecoding = false;
-                    tryPDF417Reader();
-                  }, 1000);
-                }
-              }
-            ).catch(multiFormatError => {
-              console.error('Error al acceder a la cámara:', multiFormatError);
-              if (multiFormatError.name === 'NotFoundError') {
-                observer.error(new Error('No se pudo acceder a la cámara. Verifica que esté conectada y que tengas permisos.'));
-              } else if (multiFormatError.name === 'NotAllowedError') {
-                observer.error(new Error('Permisos de cámara denegados. Por favor, permite el acceso a la cámara.'));
-              } else {
-                observer.error(new Error(`Error de cámara: ${multiFormatError.message}`));
-              }
-            });
+          videoElement.onerror = (error) => {
+            console.error('Error en elemento video:', error);
+            observer.error(new Error('Error en la reproducción de video'));
           };
-          
-          // Comenzar con el PDF417 reader ya que es más específico para licencias
-          tryPDF417Reader();
         })
-        .catch(enumError => {
-          console.error('Error al enumerar dispositivos:', enumError);
-          observer.error(new Error('No se pudieron detectar los dispositivos de cámara disponibles'));
+        .catch(error => {
+          console.error('Error al acceder a la cámara:', error);
+          
+          let errorMessage = 'Error al acceder a la cámara';
+          
+          if (error.name === 'NotAllowedError') {
+            errorMessage = 'Permisos de cámara denegados. Por favor, permite el acceso a la cámara.';
+          } else if (error.name === 'NotFoundError') {
+            errorMessage = 'No se encontró ninguna cámara disponible.';
+          } else if (error.name === 'NotReadableError') {
+            errorMessage = 'La cámara está siendo usada por otra aplicación.';
+          } else {
+            errorMessage = `Error de cámara: ${error.message}`;
+          }
+          
+          observer.error(new Error(errorMessage));
         });
       
-      // Función de limpieza cuando se cancela la suscripción
+      // Función de limpieza para cuando se cancela la suscripción
       return () => {
-        isDecoding = false;
-        try {
-          // Intentamos liberar recursos si es posible
-          const videoElement = document.querySelector('video');
-          if (videoElement && videoElement.srcObject) {
-            const stream = videoElement.srcObject as MediaStream;
-            if (stream) {
-              stream.getTracks().forEach(track => track.stop());
-            }
-            videoElement.srcObject = null;
-          }
-        } catch (error) {
-          console.error('Error al limpiar recursos:', error);
-        }
+        console.log('🛑 Deteniendo captura de cámara');
+        cleanup();
       };
     });
   }
   
   /**
-   * Detiene la decodificación de la cámara
+   * Detiene la decodificación de la cámara (implementación simplificada)
    */
   stopDecoding(): void {
     try {
-      // Los readers se detienen automáticamente cuando se completa el observable
+      console.log('🛑 Deteniendo decodificación de códigos de barras');
       
       // Detener todos los streams de video activos
       const videoElements = document.querySelectorAll('video');
@@ -302,16 +321,16 @@ export class BarcodeService {
           if (stream) {
             stream.getTracks().forEach(track => {
               track.stop();
-              console.log('Track stopped:', track.kind);
+              console.log('📹 Track detenido:', track.kind);
             });
           }
           videoElement.srcObject = null;
         }
       });
       
-      console.log('Barcode decoding stopped');
+      console.log('✅ Decodificación de códigos de barras detenida');
     } catch (error) {
-      console.error('Error stopping barcode decoding:', error);
+      console.error('❌ Error al detener decodificación:', error);
     }
   }
   
