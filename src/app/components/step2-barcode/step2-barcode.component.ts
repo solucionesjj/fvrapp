@@ -79,10 +79,19 @@ export class Step2BarcodeComponent implements OnInit, OnDestroy {
               }
             },
             error: (error) => {
-              console.error('Error de cámara:', error);
-              this.scanError = error.message || 'Error desconocido al acceder a la cámara';
+              console.error('Error al decodificar licencia de Florida desde cámara:', error);
               this.isScanning = false;
               this.isCameraActive = false;
+              
+              if (error.name === 'NotAllowedError') {
+                this.scanError = 'Acceso a la cámara denegado. Por favor, permite el acceso a la cámara en tu navegador para escanear la licencia de Florida.';
+              } else if (error.name === 'NotFoundError') {
+                this.scanError = 'No se encontró ninguna cámara disponible. Para licencias de Florida, se recomienda usar la cámara trasera del dispositivo.';
+              } else if (error.message?.includes('NotFoundException')) {
+                this.scanError = 'No se detecta código PDF417. Las licencias de Florida tienen un código de barras 2D (PDF417) en la parte posterior. Asegúrate de mostrar la parte trasera de la licencia con buena iluminación.';
+              } else {
+                this.scanError = 'Error al escanear licencia de Florida: ' + (error.message || 'Error desconocido') + '. Intenta con mejor iluminación o sube una imagen del código PDF417.';
+              }
               
               // Sugerencias adicionales basadas en el tipo de error
               if (error.message?.includes('permisos') || error.message?.includes('denegados')) {
@@ -93,13 +102,13 @@ export class Step2BarcodeComponent implements OnInit, OnDestroy {
             }
           });
         
-        // Agregar un timeout para evitar que se quede escaneando indefinidamente
+        // Timeout para el escaneo (aumentado para licencias de Florida)
         setTimeout(() => {
           if (this.isScanning && this.isCameraActive && !this.scanResult) {
-            console.log('Timeout de escaneo alcanzado, proporcionando sugerencias al usuario');
-            this.scanError = 'El escaneo está tomando más tiempo del esperado. Asegúrate de que el código PDF417 esté bien visible, iluminado y enfocado. También puedes intentar subir una imagen del código.';
+            console.log('Timeout de escaneo alcanzado para licencia de Florida');
+            this.scanError = 'El escaneo está tomando más tiempo del esperado. Para licencias de Florida, asegúrate de que el código PDF417 (código de barras 2D en la parte posterior) esté completamente visible, bien iluminado y enfocado. Mantén la cámara estable y perpendicular al código.';
           }
-        }, 30000); // 15 segundos timeout
+        }, 60000); // 60 segundos para licencias complejas
         
       } else {
         this.scanError = 'No se pudo inicializar el elemento de video';

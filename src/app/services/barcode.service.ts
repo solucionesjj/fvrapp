@@ -41,9 +41,11 @@ export class BarcodeService {
   };
   
   constructor() {
-    // Inicializar los lectores de códigos de barras
+    // Inicializar los lectores de códigos de barras con configuración optimizada para licencias
     this.reader = new BrowserMultiFormatReader();
     this.pdf417Reader = new BrowserPDF417Reader();
+    
+    console.log('BarcodeService inicializado con lectores optimizados para licencias de Florida');
   }
   
   /**
@@ -172,13 +174,14 @@ export class BarcodeService {
             isDecoding = true;
             currentReader = this.pdf417Reader;
             
-            console.log('Intentando con PDF417 reader...');
+            console.log('Intentando con PDF417 reader optimizado para licencias de Florida...');
             this.pdf417Reader.decodeFromConstraints(
               {
                 video: { 
                   facingMode: 'environment',
-                  width: { ideal: 1280 },
-                  height: { ideal: 720 }
+                  width: { ideal: 1920, min: 1280 },
+                  height: { ideal: 1080, min: 720 },
+                  frameRate: { ideal: 30, min: 15 }
                 }
               },
               videoElement,
@@ -197,7 +200,14 @@ export class BarcodeService {
                 }
               }
             ).catch(pdf417Error => {
-              console.log('PDF417 reader failed, trying MultiFormat reader:', pdf417Error.message);
+              console.error('Error con PDF417 reader para licencia de Florida:', pdf417Error);
+              
+              // Mensaje específico para errores de PDF417 con licencias de Florida
+              if (pdf417Error.message?.includes('NotFoundException')) {
+                console.log('No se detecta código PDF417 en licencia de Florida');
+              }
+              
+              console.log('Intentando con MultiFormat reader como respaldo...');
               isDecoding = false;
               tryMultiFormatReader();
             });
@@ -214,8 +224,9 @@ export class BarcodeService {
               {
                 video: { 
                   facingMode: 'environment',
-                  width: { ideal: 1280 },
-                  height: { ideal: 720 }
+                  width: { ideal: 1920, min: 1280 },
+                  height: { ideal: 1080, min: 720 },
+                  frameRate: { ideal: 30, min: 15 }
                 }
               },
               videoElement,

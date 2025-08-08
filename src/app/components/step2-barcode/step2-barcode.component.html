@@ -67,15 +67,16 @@
            </button>
          </div>
          
-         <!-- Consejos para mejorar la detección -->
+         <!-- Consejos específicos para licencias de Florida -->
          <div class="tips-container" *ngIf="scanError.includes('imagen') || scanError.includes('código de barras')">
-           <h4>Consejos para mejorar la detección:</h4>
+           <h4>💡 Consejos para licencias de Florida:</h4>
            <ul>
-             <li>Asegúrate de que el código PDF417 esté completamente visible</li>
-             <li>La imagen debe tener buena iluminación y estar enfocada</li>
-             <li>Evita reflejos o sombras sobre el código</li>
-             <li>El código debe ocupar una parte significativa de la imagen</li>
-             <li>Intenta tomar la foto desde un ángulo perpendicular al código</li>
+             <li><strong>Usa la parte posterior</strong> - El código PDF417 está en la parte trasera de la licencia</li>
+             <li><strong>Buena iluminación</strong> - Asegúrate de tener luz suficiente sin reflejos</li>
+             <li><strong>Mantén estable</strong> - No muevas la cámara ni la licencia durante el escaneo</li>
+             <li><strong>Distancia correcta</strong> - Mantén 15-20 cm entre la cámara y el código</li>
+             <li><strong>Ángulo perpendicular</strong> - La cámara debe estar directamente sobre el código</li>
+             <li><strong>Código completo</strong> - El código PDF417 (2D) debe estar completamente visible</li>
            </ul>
          </div>
       </div>

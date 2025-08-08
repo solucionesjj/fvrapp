@@ -87,204 +87,196 @@ export class Step5PdfComponent implements OnInit {
       const normalSize = 12;
 
 
-      // Print X on US Citizen question
-      var temporalX = 0;
-      if(this.userData.question1) {
-        temporalX = 236;
-      } else {
-        temporalX = 273;
-      }
-      page.drawText(this.sanitizeTextForPdf('X'), {
-        x: temporalX,
-        y: 440,
-        size: subtitleSize,
-        font: boldFont,
-        color: rgb(0, 0, 0)
-      });
+      // // Print X on US Citizen question
+      // var temporalX = 0;
+      // if(this.userData.question1) {
+      //   temporalX = 236;
+      // } else {
+      //   temporalX = 273;
+      // }
+      // page.drawText(this.sanitizeTextForPdf('X'), {
+      //   x: temporalX,
+      //   y: 440,
+      //   size: subtitleSize,
+      //   font: boldFont,
+      //   color: rgb(0, 0, 0)
+      // });
 
-      // Print X on convicted felon question
-      if(this.userData.question2) {
-      page.drawText(this.sanitizeTextForPdf('X'), {
-        x: 52,
-        y: 425,
-        size: subtitleSize,
-        font: boldFont,
-        color: rgb(0, 0, 0)
-      });
-      }
+      // // Print X on convicted felon question
+      // if(this.userData.question2) {
+      // page.drawText(this.sanitizeTextForPdf('X'), {
+      //   x: 52,
+      //   y: 425,
+      //   size: subtitleSize,
+      //   font: boldFont,
+      //   color: rgb(0, 0, 0)
+      // });
+      // }
 
-      // Print X on mentally incapacited question
-      if(this.userData.question3) {
-      page.drawText(this.sanitizeTextForPdf('X'), {
-        x: 52,
-        y: 400,
-        size: subtitleSize,
-        font: boldFont,
-        color: rgb(0, 0, 0)
-      });
-      }
+      // // Print X on mentally incapacited question
+      // if(this.userData.question3) {
+      // page.drawText(this.sanitizeTextForPdf('X'), {
+      //   x: 52,
+      //   y: 400,
+      //   size: subtitleSize,
+      //   font: boldFont,
+      //   color: rgb(0, 0, 0)
+      // });
+      // }
+
+      let line4 = 360; //Date of brith and license number
+      let line5 = 329; //Surnames Names and Name Suffix
+      let line6 = 306; //Address, City, County, Postal Code
+      let line9 = 230; //Gender
+      let line10 = 208; //Phone Number and Email
 
       
       // Print Date of Birth
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(0, 1)), {
         x: 49,
-        y:  360 ,
+        y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(1, 2)), {
         x: 69,
-        y:  360 ,
+        y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(2, 3)), {
         x: 89,
-        y:  360 ,
+        y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(3, 4)), {
         x: 106,
-        y:  360 ,
+        y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(4, 5)), {
         x: 129,
-        y:  360 ,
+        y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(5, 6)), {
         x: 146,
-        y:  360 ,
+        y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(6, 7)), {
         x: 163,
-        y:  360 ,
+        y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(7, 8)), {
         x: 180,
-        y:  360 ,
+        y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });      
 
-
-
       // Print Florida Driver License
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(0, 1)), {
         x: 204,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(1, 2)), {
         x: 224,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(2, 3)), {
         x: 239,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(3, 4)), {
         x: 258,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(4, 5)), {
         x: 276,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(5, 6)), {
         x: 295,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(6, 7)), {
         x: 315,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(7, 8)), {
         x: 334,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(8, 9)), {
         x: 351,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(9, 10)), {
         x: 374,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(10, 11)), {
         x: 391,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(11, 12)), {
         x: 408,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(12, 13)), {
         x: 431,
-        y: 360,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
@@ -294,66 +286,61 @@ export class Step5PdfComponent implements OnInit {
       // Print Surnames
       page.drawText(this.sanitizeTextForPdf(this.userData.surnames), {
         x: 48,
-        y: 329,
+        y:  line5,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
-       // Print Names
+      // Print Names
       page.drawText(this.sanitizeTextForPdf(this.userData.firstName + ' ' + this.userData.secondName), {
         x: 252,
-        y: 329,
+        y: line5,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });     
-
-       // Print Name Suffix
-       if(this.userData.Sex === '1' || this.userData.Sex === '2') {
+      // Print Name Suffix
+      if(this.userData.Sex === '1' || this.userData.Sex === '2') {
         page.drawText(this.sanitizeTextForPdf(this.userData.Sex === '1' ? 'MR.' : 'MS.'), {
           x: 539,
-          y: 329,
+          y: line5,
           size: normalSize,
           font: boldFont,
           color: rgb(0, 0, 0)
         });     
        }
        
-       // Print Address
+      // Print Address
       page.drawText(this.sanitizeTextForPdf(this.userData.address), {
         x: 48,
-        y: 306,
+        y: line6,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });    
-
-       // Print City
+      // Print City
       page.drawText(this.sanitizeTextForPdf(this.userData.city), {
         x: 371,
-        y: 306,
+        y: line6,
         // size: normalSize,
         size: 9,
         font: boldFont,
         color: rgb(0, 0, 0)
       });    
-
       // Print County
       page.drawText(this.sanitizeTextForPdf(this.userData.countyOfResidence), {
         x: 451,
-        y: 306,
+        y: line6,
         maxWidth: 77,
         // size: normalSize,
         size: 9,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
-
       // Print Postal Code
       page.drawText(this.sanitizeTextForPdf(this.userData.postalCode), {
         x: 530,
-        y: 306,
+        y: line6,
         // size: normalSize,
         size: 9,
         font: boldFont,
@@ -370,7 +357,7 @@ export class Step5PdfComponent implements OnInit {
         }
         page.drawText(this.sanitizeTextForPdf('X'), {
           x: temporalX,
-          y: 230,
+          y: line9,
           size: subtitleSize,
           font: boldFont,
         color: rgb(0, 0, 0)
@@ -380,7 +367,7 @@ export class Step5PdfComponent implements OnInit {
     // Print Phone Number
     page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber), {
           x: 72,
-          y: 208,
+          y: line10,
           size: subtitleSize,
           font: boldFont,
         color: rgb(0, 0, 0)
@@ -389,7 +376,7 @@ export class Step5PdfComponent implements OnInit {
     // Print Email
     page.drawText(this.sanitizeTextForPdf(this.userData.email), {
           x: 255,
-          y: 208,
+          y: line10,
           size: subtitleSize,
           font: boldFont,
         color: rgb(0, 0, 0)
