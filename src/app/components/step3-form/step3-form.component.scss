@@ -30,6 +30,53 @@ mat-radio-button {
   width: 100%;
 }
 
+// /* Estilos para el autocompletado */
+// .mat-autocomplete-panel {
+//   z-index: 9999 !important;
+//   max-height: 200px;
+//   overflow-y: auto;
+// }
+
+/* Asegurar que el form field tenga posición relativa */
+mat-form-field {
+  position: relative;
+  z-index: 1;
+}
+
+
+mat-option {
+  background-color: white !important;;
+}
+
+/* Estilos específicos para el panel del autocompletado */
+::ng-deep .mat-autocomplete-panel {
+  z-index: 9999 !important;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+::ng-deep .mat-option {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+::ng-deep .mat-option:last-child {
+  border-bottom: none;
+}
+
+::ng-deep .mat-option:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+::ng-deep .mat-option.mat-selected {
+  background-color: rgba(63, 81, 181, 0.1);
+  color: #3f51b5;
+}
+
 mat-card-actions.main-actions {
   display: flex;
   justify-content: space-between;

@@ -37,7 +37,17 @@
         <p>{{ translationService.translate('step3.county.title') }}</p>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ translationService.translate('step3.county.label') }}</mat-label>
-          <input matInput [(ngModel)]="countyOfResidence" (input)="validateForm()" [placeholder]="translationService.translate('step3.county.placeholder')">
+          <input matInput 
+                 [formControl]="countyControl"
+                 [matAutocomplete]="countyAuto" 
+                 [placeholder]="translationService.translate('step3.county.placeholder')">
+          <mat-autocomplete #countyAuto="matAutocomplete" 
+                           [panelWidth]="'auto'"
+                           class="county-autocomplete">
+            <mat-option *ngFor="let county of filteredCounties | async" [value]="county">
+              {{ county }}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
       </div>
       

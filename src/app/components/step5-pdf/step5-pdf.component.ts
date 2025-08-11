@@ -130,6 +130,11 @@ export class Step5PdfComponent implements OnInit {
       let line9 = 230; //Gender
       let line10 = 208; //Phone Number and Email
 
+      let printPhoneNumber = false;
+      let printEmail = false;
+
+
+
       
       // Print Date of Birth
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(0, 1)), {
@@ -365,14 +370,17 @@ export class Step5PdfComponent implements OnInit {
     }
 
     // Print Phone Number
-    page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber), {
-          x: 72,
-          y: line10,
-          size: subtitleSize,
-          font: boldFont,
-        color: rgb(0, 0, 0)
+    if(printPhoneNumber) {
+      page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber), {
+        x: 72,
+        y: line10,
+        size: subtitleSize,
+        font: boldFont,
+      color: rgb(0, 0, 0)
       });
+    }
 
+    if(printEmail) {
     // Print Email
     page.drawText(this.sanitizeTextForPdf(this.userData.email), {
           x: 255,
@@ -381,6 +389,8 @@ export class Step5PdfComponent implements OnInit {
           font: boldFont,
         color: rgb(0, 0, 0)
       });
+    }
+
       
       // // Agregar firma
       // if (this.userData.signature && this.userData.signature.trim() !== '') {
