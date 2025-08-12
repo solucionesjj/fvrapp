@@ -51,6 +51,49 @@
             </div>
           </div>
         </mat-tab>
+        
+        <mat-tab [label]="translationService.translate('step2.bluetooth')">
+          <div class="bluetooth-container">
+            <div *ngIf="!isBluetoothListening && !scanResult" class="bluetooth-placeholder">
+              <div class="bluetooth-instructions">
+                <mat-icon class="bluetooth-icon">bluetooth</mat-icon>
+                <h3>{{ translationService.translate('step2.bluetooth_title') }}</h3>
+                <p>{{ translationService.translate('step2.bluetooth_instructions') }}</p>
+                <ul class="bluetooth-steps">
+                  <li>{{ translationService.translate('step2.bluetooth_step1') }}</li>
+                  <li>{{ translationService.translate('step2.bluetooth_step2') }}</li>
+                  <li>{{ translationService.translate('step2.bluetooth_step3') }}</li>
+                </ul>
+              </div>
+              
+              <button mat-raised-button color="primary" (click)="startBluetoothListening()">
+                <mat-icon>bluetooth_searching</mat-icon>
+                {{ translationService.translate('step2.bluetooth_start') }}
+              </button>
+            </div>
+            
+            <div *ngIf="isBluetoothListening" class="bluetooth-listening">
+              <div class="listening-indicator">
+                <mat-icon class="pulse-icon">bluetooth_connected</mat-icon>
+                <h3>{{ translationService.translate('step2.bluetooth_listening') }}</h3>
+                <p>{{ translationService.translate('step2.bluetooth_waiting') }}</p>
+              </div>
+              
+              <div *ngIf="bluetoothInput" class="bluetooth-input-display">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>{{ translationService.translate('step2.bluetooth_scanned') }}</mat-label>
+                  <input matInput [value]="bluetoothInput" readonly>
+                  <mat-icon matSuffix>qr_code_scanner</mat-icon>
+                </mat-form-field>
+              </div>
+              
+              <button mat-raised-button color="warn" (click)="stopBluetoothListening()">
+                <mat-icon>bluetooth_disabled</mat-icon>
+                {{ translationService.translate('step2.bluetooth_stop') }}
+              </button>
+            </div>
+          </div>
+        </mat-tab>
       </mat-tab-group>
       
       <div *ngIf="scanError" class="error-message">

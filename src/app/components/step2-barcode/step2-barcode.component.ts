@@ -7,6 +7,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { BarcodeService } from '../../services/barcode.service';
 import { DataStorageService } from '../../services/data-storage.service';
@@ -23,7 +25,9 @@ import { TranslationService } from '../../services/translation.service';
     MatTabsModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './step2-barcode.component.html',
   styleUrls: ['./step2-barcode.component.scss']
@@ -37,6 +41,13 @@ export class Step2BarcodeComponent implements OnInit, OnDestroy {
   scanResult: string | null = null;
   scanError: string | null = null;
   selectedImage: string | null = null;
+  
+  // Propiedades para Bluetooth
+  isBluetoothListening = false;
+  bluetoothInput = '';
+  private bluetoothBuffer = '';
+  private bluetoothTimeout: any;
+  private keydownListener?: (event: KeyboardEvent) => void;
   
   private scanSubscription?: Subscription;
   
@@ -59,6 +70,7 @@ export class Step2BarcodeComponent implements OnInit, OnDestroy {
   
   ngOnDestroy(): void {
     this.stopCamera();
+    this.stopBluetoothListening();
   }
   
   startCamera(): void {
@@ -329,5 +341,85 @@ export class Step2BarcodeComponent implements OnInit, OnDestroy {
       barcode: undefined,
       barcodeType: undefined
     });
+  }
+
+  // Métodos para Bluetooth Scanner
+  startBluetoothListening(): void {
+    this.isBluetoothListening = true;
+    this.bluetoothInput = '';
+    this.bluetoothBuffer = '';
+    this.scanError = null;
+
+    // Crear el listener para eventos de teclado
+    this.keydownListener = (event: KeyboardEvent) => {
+      // Ignorar si hay un input enfocado (para evitar interferir con entrada manual)
+      const activeElement = document.activeElement;
+      if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        return;
+      }
+
+      // Detectar Enter (código 13) como fin de escaneo
+      if (event.keyCode === 13 || event.key === 'Enter') {
+        event.preventDefault();
+        this.processBluetooth();
+        return;
+      }
+
+      // Solo procesar caracteres alfanuméricos y algunos símbolos comunes en códigos de barras
+      const char = event.key;
+      if (char && char.length === 1 && /[a-zA-Z0-9\-_@.\s]/.test(char)) {
+        event.preventDefault();
+        this.bluetoothBuffer += char;
+        this.bluetoothInput = this.bluetoothBuffer;
+
+        // Limpiar timeout anterior
+        if (this.bluetoothTimeout) {
+          clearTimeout(this.bluetoothTimeout);
+        }
+
+        // Establecer timeout para procesar automáticamente si no hay más entrada
+        this.bluetoothTimeout = setTimeout(() => {
+          if (this.bluetoothBuffer.length >= 6) { // Mínimo 6 caracteres para un código válido
+            this.processBluetooth();
+          }
+        }, 100); // 100ms de timeout
+      }
+    };
+
+    // Añadir el listener al documento
+    document.addEventListener('keydown', this.keydownListener, true);
+  }
+
+  stopBluetoothListening(): void {
+    this.isBluetoothListening = false;
+    
+    // Remover el listener
+    if (this.keydownListener) {
+      document.removeEventListener('keydown', this.keydownListener, true);
+      this.keydownListener = undefined;
+    }
+
+    // Limpiar timeout
+    if (this.bluetoothTimeout) {
+      clearTimeout(this.bluetoothTimeout);
+      this.bluetoothTimeout = undefined;
+    }
+
+    // Limpiar buffer
+    this.bluetoothBuffer = '';
+  }
+
+  private processBluetooth(): void {
+    if (this.bluetoothBuffer.trim().length >= 6) {
+      const scannedCode = this.bluetoothBuffer.trim();
+      this.scanResult = scannedCode;
+      this.stopBluetoothListening();
+      this.saveBarcode(scannedCode, 'bluetooth');
+    } else {
+      this.scanError = 'Código escaneado demasiado corto. Intente escanear nuevamente.';
+    }
+    
+    // Limpiar buffer después del procesamiento
+    this.bluetoothBuffer = '';
   }
 }
