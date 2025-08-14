@@ -42,8 +42,8 @@
                  [matAutocomplete]="countyAuto" 
                  [placeholder]="translationService.translate('step3.county.placeholder')">
           <mat-autocomplete #countyAuto="matAutocomplete" 
-                           [panelWidth]="'auto'"
-                           class="county-autocomplete">
+                           [panelWidth]="'auto'" 
+                           class="county-autocomplete"> 
             <mat-option *ngFor="let county of filteredCounties | async" [value]="county">
               {{ county }}
             </mat-option>

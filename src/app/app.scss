@@ -7,10 +7,11 @@
 }
 
 .app-header {
-  background-color: var(--primary-color);
-  color: var(--light-text);
+  background-color: rgba(255, 255, 255, 0) !important;
+  // background-color: var(--primary-color);
+  // color: var(--light-text);
   padding: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
@@ -19,6 +20,7 @@
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0) !important;
 }
 
 .app-header h1 {
@@ -30,8 +32,11 @@
 .app-content {
   flex: 1;
   padding: 20px;
-  background-color: var(--background-color);
+  // background-color: var(--background-color);
+  background: #EFF6FF;
+  background: linear-gradient(90deg,rgba(239, 246, 255, 1) 0%, rgba(224, 231, 255, 1) 50%);
 }
+
 
 .app-footer {
   background-color: var(--primary-color);

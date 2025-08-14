@@ -1,11 +1,13 @@
 <div class="signature-container">
+  
   <mat-card>
     <mat-card-header>
       <mat-card-title>{{ translationService.translate('step1.title') }}</mat-card-title>
-      <mat-card-subtitle>{{ translationService.translate('step1.subtitle') }}</mat-card-subtitle>
+       <mat-card-subtitle>{{ translationService.translate('step1.subtitle') }}</mat-card-subtitle> 
     </mat-card-header>
     
     <mat-card-content>
+      <br>
       <div class="signature-pad-container">
         <div class="signature-label">{{ translationService.translate('step1.signature') }}</div>
         <div class="canvas-container">
@@ -14,22 +16,26 @@
         <div *ngIf="signatureError" class="error-message">
           {{ translationService.translate('step1.error') }}
         </div>
-        <button mat-raised-button color="warn" (click)="clearSignature()">
+        <div style="display: flex; justify-content: flex-end;">
+        <button  mat-raised-button color="warn" (click)="clearSignature()">
           {{ translationService.translate('step1.clear') }}
         </button>
+        </div>
+
       </div>
       
-      <div class="consent-container">
+      <div class="consent-container" style="">
         <mat-checkbox [(ngModel)]="consent" color="primary">
-          {{ translationService.translate('step1.consent') }}
-        </mat-checkbox>
+          <span><h4>{{ translationService.translate('step1.consent.title') }}</h4></span>
+          {{ translationService.translate('step1.consent') }} 
+        </mat-checkbox><br>&nbsp;
       </div>
     </mat-card-content>
     
     <mat-card-actions class="main-actions">
       <span class="spacer"></span>
       <button mat-raised-button color="primary" [disabled]="!consent || isSignatureEmptyFlag" (click)="saveAndContinue()">
-        {{ translationService.translate('nav.next') }}
+        {{ translationService.translate('step1.nav.next') }}
       </button>
     </mat-card-actions>
     

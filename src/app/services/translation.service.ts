@@ -30,16 +30,18 @@ export class TranslationService {
       'common.restart': 'Reiniciar proceso',
       
       // Step 1
-      'step1.title': 'Paso 1: Firma y Consentimiento',
-      'step1.subtitle': 'Por favor, firme y acepte los términos para continuar',
-      'step1.signature': 'Su firma:',
+      'step1.title': 'Consentimiento para el registro de votantes',
+      'step1.subtitle': 'Por favor revise y firme para comenzar su registro.',
+      'step1.signature': 'Firma digital *',
       'step1.clear': 'Borrar firma',
-      'step1.consent': 'Doy mi consentimiento para el procesamiento de mis datos personales de acuerdo con los términos y condiciones.',
+      'step1.consent.title':'Doy mi consentimiento para la recopilación y el procesamiento de datos.',
+      'step1.consent': 'Entiendo que mi información se utilizará para fines de registro de votantes de acuerdo con la ley del estado de Florida.',
       'step1.error': 'Por favor, proporcione su firma antes de continuar.',
+      'step1.nav.next': 'Continuar con elegibilidad',
       
       // Step 2
-      'step2.title': 'Paso 2: Escaneo de Código de Barras',
-      'step2.subtitle': 'Escanee el código de barras de su documento',
+      'step2.title': 'Escanee su licencia de conducir o identificación',
+      'step2.subtitle': 'Cargue o tome una fotografía de su licencia de conducir o tarjeta de identificación estatal',
       'step2.camera': 'Cámara',
       'step2.file': 'Archivo',
       'step2.manual': 'Manual',
@@ -64,8 +66,8 @@ export class TranslationService {
       'step2.bluetooth_stop': 'Desactivar Escáner',
 
       // Step 3
-      'step3.title': 'Paso 3: Formulario de Preguntas',
-      'step3.subtitle': 'Por favor, responda las siguientes preguntas',
+      'step3.title': 'Preguntas de elegibilidad',
+      'step3.subtitle': 'Por favor, dilengie los siguientes datos',
       'step3.question1.title': 'Pregunta 1',
       'step3.question1.text': '¿Es usted ciudadano estadounidense?',
       'step3.question2.title': 'Pregunta 2',
@@ -83,8 +85,9 @@ export class TranslationService {
       'step3.error': 'Por favor, seleccione un condado de residencia.',
       
       // Step 4
-      'step4.title': 'Paso 4: Resumen de Información',
-      'step4.subtitle': 'Revise la información antes de confirmar',
+
+      'step4.title': 'Revise su información',
+      'step4.subtitle': 'Revise la información antes de continuar el proceso',
       'step4.name': 'Nombre',
       'step4.surnames': 'Apellidos',
       'step4.driverLicense': 'Licencia de Conducción',
@@ -116,13 +119,14 @@ export class TranslationService {
       'step4.success': 'Datos enviados correctamente',
       'step4.error': 'Error al enviar los datos',
       
+
       // Step 5
-      'step5.title': 'Paso 5: Generación de PDF',
-      'step5.subtitle': 'Su información ha sido procesada correctamente',
+      'step5.title': 'Fin del proceso',
+      'step5.subtitle': 'Finalización del proceso',
       'step5.success_title': '¡Proceso completado con éxito!',
-      'step5.success_message': 'Sus datos han sido enviados correctamente a nuestra base de datos.',
-      'step5.pdf_title': 'Resumen en PDF',
-      'step5.pdf_description': 'Se ha generado un documento PDF con un resumen de la información proporcionada.',
+      'step5.success_message': 'Please print the form to complete the process.',
+      'step5.pdf_title': 'PDF',
+      'step5.pdf_description': 'Se ha generado un documento PDF con los datos proporcionados.',
       'step5.download': 'Descargar PDF',
       'step5.view': 'Ver PDF',
       'step5.error': 'No hay datos disponibles para generar el PDF. Por favor, complete los pasos anteriores.',
@@ -158,16 +162,18 @@ export class TranslationService {
       'common.restart': 'Restart process',
       
       // Step 1
-      'step1.title': 'Step 1: Signature and Consent',
-      'step1.subtitle': 'Please sign and accept the terms to continue',
-      'step1.signature': 'Your signature:',
+      'step1.title': 'Voter Registration Consent',
+      'step1.subtitle': 'Please review and sign to begin your registration',
+      'step1.signature': 'Digital signature *',
       'step1.clear': 'Clear signature',
-      'step1.consent': 'I give my consent for the processing of my personal data in accordance with the terms and conditions.',
+      'step1.consent.title':'I consent to data collection and processing',
+      'step1.consent': 'I understand that my information will be used for voter registration purposes in accordance with Florida state law.',
       'step1.error': 'Please provide your signature before continuing.',
+      'step1.nav.next': 'Continue to eligibility',
       
       // Step 2
-      'step2.title': 'Step 2: Barcode Scanning',
-      'step2.subtitle': 'Scan the barcode from your document',
+      'step2.title': 'Scan your driver license or ID',
+      'step2.subtitle': 'Please upload or take a photo of your driver license or state ID card',
       'step2.camera': 'Camera',
       'step2.file': 'File',
       'step2.manual': 'Manual',
@@ -192,8 +198,8 @@ export class TranslationService {
       'step2.bluetooth_stop': 'Deactivate Scanner',
       
       // Step 3
-      'step3.title': 'Step 3: Question Form',
-      'step3.subtitle': 'Please answer the following questions',
+      'step3.title': 'Eligibility Questions',
+      'step3.subtitle': 'Please fill out the following information.',
       'step3.question1.title': 'Question 1',
       'step3.question1.text': 'Are you a U.S. citizen?',
       'step3.question2.title': 'Question 2',
@@ -211,8 +217,8 @@ export class TranslationService {
       'step3.error': 'Please select a county of residence.',
       
       // Step 4
-      'step4.title': 'Step 4: Information Summary',
-      'step4.subtitle': 'Review the information before confirming',
+      'step4.title': 'Review Your Information',
+      'step4.subtitle': 'Review the information before continue the process',
       'step4.name': 'Name',
       'step4.surnames': 'Surnames',
       'step4.driverLicense': 'Driver License',
@@ -245,12 +251,12 @@ export class TranslationService {
       'step4.error': 'Error sending data',
       
       // Step 5
-      'step5.title': 'Step 5: PDF Generation',
-      'step5.subtitle': 'Your information has been processed successfully',
+      'step5.title': 'End of the process',
+      'step5.subtitle': 'Completion of the process',
       'step5.success_title': 'Process completed successfully!',
-      'step5.success_message': 'Your data has been sent correctly to our database.',
-      'step5.pdf_title': 'PDF Summary',
-      'step5.pdf_description': 'A PDF document has been generated with a summary of the information provided.',
+      'step5.success_message': 'Please print the form to complete the process.',
+      'step5.pdf_title': 'PDF',
+      'step5.pdf_description': 'A PDF document has been generated with the data provided.',
       'step5.download': 'Download PDF',
       'step5.view': 'View PDF',
       'step5.processing': 'Generating PDF...',
