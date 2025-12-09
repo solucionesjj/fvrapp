@@ -57,7 +57,9 @@ export class Step5PdfComponent implements OnInit {
     });
   }
   
-
+   mmToPt (mm: number) {
+    return mm * 2.83465;
+   }
   
   async generatePdf(): Promise<void> {
     if (!this.userData) {
@@ -124,70 +126,70 @@ export class Step5PdfComponent implements OnInit {
       // });
       // }
 
-      let line4 = 360; //Date of brith and license number
-      let line5 = 329; //Surnames Names and Name Suffix
-      let line6 = 306; //Address, City, County, Postal Code
-      let line9 = 230; //Gender
-      let line10 = 208; //Phone Number and Email
+      let line4 = this.mmToPt(127); //Date of brith and license number
+      let line5 = this.mmToPt(117); //Surnames Names and Name Suffix
+      let line6 = this.mmToPt(109); //Address, City, County, Postal Code
+      let line9 = this.mmToPt(85); //Gender
+      let line10 = this.mmToPt(76); //Phone Number and Email
 
-      let printPhoneNumber = false;
-      let printEmail = false;
+      let printPhoneNumber = true;
+      let printEmail = true;
 
 
 
       
       // Print Date of Birth
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(0, 1)), {
-        x: 49,
+        x: this.mmToPt(20),
         y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(1, 2)), {
-        x: 69,
+        x: this.mmToPt(26),
         y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(2, 3)), {
-        x: 89,
+        x: this.mmToPt(34),
         y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(3, 4)), {
-        x: 106,
+        x: this.mmToPt(39),
         y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(4, 5)), {
-        x: 129,
+        x: this.mmToPt(47),
         y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(5, 6)), {
-        x: 146,
+        x: this.mmToPt(53),
         y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(6, 7)), {
-        x: 163,
+        x: this.mmToPt(58),
         y:  line4 ,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(7, 8)), {
-        x: 180,
+        x: this.mmToPt(64),
         y:  line4 ,
         size: subtitleSize,
         font: boldFont,
@@ -196,91 +198,91 @@ export class Step5PdfComponent implements OnInit {
 
       // Print Florida Driver License
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(0, 1)), {
-        x: 204,
+        x: this.mmToPt(73),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(1, 2)), {
-        x: 224,
+        x: this.mmToPt(79),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(2, 3)), {
-        x: 239,
+        x: this.mmToPt(85),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(3, 4)), {
-        x: 258,
+        x: this.mmToPt(91),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(4, 5)), {
-        x: 276,
+        x: this.mmToPt(97),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(5, 6)), {
-        x: 295,
+        x: this.mmToPt(104),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(6, 7)), {
-        x: 315,
+        x: this.mmToPt(110),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(7, 8)), {
-        x: 334,
+        x: this.mmToPt(117),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(8, 9)), {
-        x: 351,
+        x: this.mmToPt(123),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(9, 10)), {
-        x: 374,
+        x: this.mmToPt(131),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(10, 11)), {
-        x: 391,
+        x: this.mmToPt(137),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(11, 12)), {
-        x: 408,
+        x: this.mmToPt(142),
         y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(12, 13)), {
-        x: 431,
+        x: this.mmToPt(150),
         y: line4,
         size: subtitleSize,
         font: boldFont,
@@ -290,34 +292,38 @@ export class Step5PdfComponent implements OnInit {
 
       // Print Surnames
       page.drawText(this.sanitizeTextForPdf(this.userData.surnames), {
-        x: 48,
+        x: this.mmToPt(20),
         y:  line5,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       // Print Names
+      this.userData.firstName = this.userData.firstName.replace(/ NONE$/, "");
+      this.userData.secondName = this.userData.secondName.replace(/ NONE$/, "");  
+
       page.drawText(this.sanitizeTextForPdf(this.userData.firstName + ' ' + this.userData.secondName), {
-        x: 252,
+        x: this.mmToPt(90),
         y: line5,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });     
+      
       // Print Name Suffix
-      if(this.userData.Sex === '1' || this.userData.Sex === '2') {
-        page.drawText(this.sanitizeTextForPdf(this.userData.Sex === '1' ? 'MR.' : 'MS.'), {
-          x: 539,
-          y: line5,
-          size: normalSize,
-          font: boldFont,
-          color: rgb(0, 0, 0)
-        });     
-       }
+      // if(this.userData.Sex === '1' || this.userData.Sex === '2') {
+      //   page.drawText(this.sanitizeTextForPdf(this.userData.Sex === '1' ? 'MR.' : 'MS.'), {
+      //     x: 539,
+      //     y: line5,
+      //     size: normalSize,
+      //     font: boldFont,
+      //     color: rgb(0, 0, 0)
+      //   });     
+      //  }
        
       // Print Address
       page.drawText(this.sanitizeTextForPdf(this.userData.address), {
-        x: 48,
+        x: this.mmToPt(20),
         y: line6,
         size: normalSize,
         font: boldFont,
@@ -325,7 +331,7 @@ export class Step5PdfComponent implements OnInit {
       });    
       // Print City
       page.drawText(this.sanitizeTextForPdf(this.userData.city), {
-        x: 371,
+        x: this.mmToPt(131),
         y: line6,
         // size: normalSize,
         size: 9,
@@ -334,7 +340,7 @@ export class Step5PdfComponent implements OnInit {
       });    
       // Print County
       page.drawText(this.sanitizeTextForPdf(this.userData.countyOfResidence), {
-        x: 451,
+        x: this.mmToPt(159),
         y: line6,
         maxWidth: 77,
         // size: normalSize,
@@ -343,8 +349,9 @@ export class Step5PdfComponent implements OnInit {
         color: rgb(0, 0, 0)
       });
       // Print Postal Code
+      this.userData.postalCode = this.userData.postalCode.replace(/0000$/, "");  
       page.drawText(this.sanitizeTextForPdf(this.userData.postalCode), {
-        x: 530,
+        x: this.mmToPt(184),
         y: line6,
         // size: normalSize,
         size: 9,
@@ -356,9 +363,9 @@ export class Step5PdfComponent implements OnInit {
       if(this.userData.Sex === '1' || this.userData.Sex === '2') {
         var temporalX = 0;
         if(this.userData.Sex === '1') {
-          temporalX = 450;
+          temporalX = this.mmToPt(157);
         } else {
-          temporalX = 421;
+          temporalX = this.mmToPt(148);
         }
         page.drawText(this.sanitizeTextForPdf('X'), {
           x: temporalX,
@@ -372,7 +379,7 @@ export class Step5PdfComponent implements OnInit {
     // Print Phone Number
     if(printPhoneNumber) {
       page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber), {
-        x: 72,
+        x: this.mmToPt(30),
         y: line10,
         size: subtitleSize,
         font: boldFont,
@@ -383,7 +390,7 @@ export class Step5PdfComponent implements OnInit {
     if(printEmail) {
     // Print Email
     page.drawText(this.sanitizeTextForPdf(this.userData.email), {
-          x: 255,
+          x: this.mmToPt(90),
           y: line10,
           size: subtitleSize,
           font: boldFont,
