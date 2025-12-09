@@ -298,9 +298,14 @@ export class Step5PdfComponent implements OnInit {
         font: boldFont,
         color: rgb(0, 0, 0)
       });
+
       // Print Names
-      this.userData.firstName = this.userData.firstName.replace(/ NONE$/, "");
-      this.userData.secondName = this.userData.secondName.replace(/ NONE$/, "");  
+      if(this.userData.firstName == 'NONE') {
+        this.userData.firstName = '';
+      }
+      if(this.userData.secondName == 'NONE') {
+        this.userData.secondName = '';
+      }
 
       page.drawText(this.sanitizeTextForPdf(this.userData.firstName + ' ' + this.userData.secondName), {
         x: this.mmToPt(90),
