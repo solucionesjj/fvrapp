@@ -383,7 +383,17 @@ export class Step5PdfComponent implements OnInit {
 
     // Print Phone Number
     if(printPhoneNumber) {
-      page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber), {
+      page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber.substring(0, 3)), {
+        x: this.mmToPt(20),
+        y: line10,
+        size: subtitleSize,
+        font: boldFont,
+      color: rgb(0, 0, 0)
+      });
+    }
+
+    if(printPhoneNumber) {
+      page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber.substring(3, this.userData.phoneNumber.length)), {
         x: this.mmToPt(30),
         y: line10,
         size: subtitleSize,
