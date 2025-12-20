@@ -14,22 +14,36 @@
         <p>{{ translationService.translate('step5.success_message') }}</p>
       </div>
       
-
+      
       
       <div class="pdf-preview" *ngIf="pdfUrl">
         <h3>{{ translationService.translate('step5.pdf_title') }}</h3>
         <p>{{ translationService.translate('step5.pdf_description') }}</p>
         
-        <div class="pdf-actions">
-          <button mat-raised-button color="primary" (click)="downloadPdf()">
+        <div class="pdf-actions" >
+          <!-- <button mat-raised-button color="primary" (click)="downloadPdf()">
             <mat-icon>download</mat-icon>
             {{ translationService.translate('step5.download') }}
-          </button>
+          </button> -->
+
           
           <a [href]="pdfUrl" target="_blank" mat-raised-button>
             <mat-icon>visibility</mat-icon>
             {{ translationService.translate('step5.view') }}
           </a>
+&nbsp;&nbsp;
+
+          <a [href]="receiptPdfUrl" target="_blank" mat-raised-button>
+            <mat-icon>visibility</mat-icon>
+            {{ translationService.translate('step5.generate_receipt') }}
+          </a>
+
+
+
+        <!-- <button mat-raised-button color="accent" (click)="generateReceiptPdf()">
+          <mat-icon>receipt</mat-icon>
+          {{ translationService.translate('step5.generate_receipt') }}
+        </button> -->
         </div>
       </div>
       

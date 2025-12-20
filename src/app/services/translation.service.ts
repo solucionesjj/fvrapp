@@ -130,6 +130,8 @@ export class TranslationService {
       'step5.download': 'Descargar PDF',
       'step5.view': 'Ver PDF',
       'step5.error': 'No hay datos disponibles para generar el PDF. Por favor, complete los pasos anteriores.',
+      'step5.generate_pdf': 'Generar PDF',
+      'step5.generate_receipt': 'Ver Recibo',
       
       // Confirm Dialog
       'confirm.title': 'Confirmar reinicio',
@@ -262,6 +264,8 @@ export class TranslationService {
       'step5.processing': 'Generating PDF...',
       'step5.success': 'PDF generated successfully',
       'step5.error': 'No data available to generate PDF. Please complete the previous steps.',
+      'step5.generate_pdf': 'Generate PDF',
+      'step5.generate_receipt': 'View Receipt',
       
       // Confirm Dialog
       'confirm.title': 'Confirm restart',

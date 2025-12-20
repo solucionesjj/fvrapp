@@ -32,6 +32,7 @@ export class Step5PdfComponent implements OnInit {
   userData: UserData | null = null;
   isGeneratingPdf = false;
   pdfUrl: string | null = null;
+  receiptPdfUrl: string | null = null;
   
   constructor(
     private router: Router,
@@ -53,6 +54,7 @@ export class Step5PdfComponent implements OnInit {
         //   signatureStart: userData.signature?.substring(0, 30) || 'N/A'
         // });
         this.generatePdf();
+        this.generateReceiptPdf();
       }
     });
   }
@@ -60,6 +62,8 @@ export class Step5PdfComponent implements OnInit {
    mmToPt (mm: number) {
     return mm * 2.83465;
    }
+
+  
   
   async generatePdf(): Promise<void> {
     if (!this.userData) {
@@ -503,9 +507,9 @@ export class Step5PdfComponent implements OnInit {
       
       // Serializar el PDF a bytes
       const pdfBytes = await pdfDoc.save();
-      
-      // Convertir a Blob y crear URL
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const bytes = new Uint8Array(pdfBytes.length);
+      bytes.set(pdfBytes);
+      const blob = new Blob([bytes.buffer], { type: 'application/pdf' });
       this.pdfUrl = URL.createObjectURL(blob);
       
       this.isGeneratingPdf = false;
@@ -545,6 +549,234 @@ export class Step5PdfComponent implements OnInit {
         return '?'; // Otros caracteres problemáticos
       })
       .replace(/[^\x20-\x7E]/g, '?'); // Reemplazar cualquier otro carácter no ASCII con ?
+  }
+
+
+
+  async generateReceiptPdf(): Promise<void> {
+    if (!this.userData) {
+      this.snackBar.open(this.translationService.translate('step5.error'), this.translationService.translate('common.close'), { duration: 3000 });
+      return;
+    }
+    this.isGeneratingPdf = true;
+    try {
+
+      const titleSize = 20;
+      const subtitleSize = 14;
+      const normalSize = 11;
+
+      const applicantName = this.sanitizeTextForPdf(((this.userData.firstName || '') + ' ' + (this.userData.secondName || '')+ ' ' +(this.userData.surnames || '')).trim());
+      const county = this.sanitizeTextForPdf(this.userData.countyOfResidence || '');
+      const collectedDate = this.userData.updatedAt ? new Date(this.userData.updatedAt) : new Date();
+      const dateFormatted = this.formatDateYyyyMmmDd(collectedDate);
+
+      const text01 = this.sanitizeTextForPdf('3PVRO VOTER REGISTRATION APPLICATION RECEIPT');
+      const text02 = this.sanitizeTextForPdf('(5. 97.0575, F.S.)');
+      const text03 = this.sanitizeTextForPdf('*I HAVE GIVEN MY VOTER REGISTRATION APPLICATION TO A 3PVRO');
+      const text04 = this.sanitizeTextForPdf('TO SUBMIT TO MY SUPERVISOR OF ELECTIONS OR THE DIVISION OF ELECTIONS');
+      const text05 = this.sanitizeTextForPdf('SO THAT I WILL BE REGISTERED TO VOTE*');
+      const text06 = this.sanitizeTextForPdf('I can check my registration status at: registration.elections.myflorida.com/CheckVoterStatus');
+     
+      const text07 = this.sanitizeTextForPdf('APPLICANT\'s NAME: ');
+      const text08 = this.sanitizeTextForPdf('APPLICANT\'s PARTY AFFILIATION: ');
+      const text09 = this.sanitizeTextForPdf('APPLICANT\'S COUNTY OF RESIDENCE: ');
+      const text10 = this.sanitizeTextForPdf('DATE APPLICATION COLLECTED: ');
+      const text11 = this.sanitizeTextForPdf('3PVRO ID #: ');
+      const text12 = this.sanitizeTextForPdf('REGISTRATION AGENT / PERSON WHO COLLECTED APPLICATION: ');
+     
+      const text13A = this.sanitizeTextForPdf('DS-DE 129 (eff. 09/26/2023)');
+      const text13B = this.sanitizeTextForPdf('Rule 1S-2.042, F.A.C.');
+
+
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage(PageSizes.Letter);
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const boldFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const pageWidth = page.getWidth();
+
+      const text01x = (pageWidth - boldFont.widthOfTextAtSize(text01, normalSize)) / 2;
+      const text02x = (pageWidth - boldFont.widthOfTextAtSize(text02, normalSize)) / 2;
+      const text03x = (pageWidth - boldFont.widthOfTextAtSize(text03, normalSize)) / 2;
+      const text04x = (pageWidth - boldFont.widthOfTextAtSize(text04, normalSize)) / 2;
+      const text05x = (pageWidth - boldFont.widthOfTextAtSize(text05, normalSize)) / 2;
+      const text06x = (pageWidth - boldFont.widthOfTextAtSize(text06, normalSize)) / 2;
+
+      var texty = this.mmToPt(253);
+      var lineHeight = this.mmToPt(7);
+      page.drawText(text01, {x: text01x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      page.drawText(text02, {x: text02x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight - lineHeight;
+      page.drawText(text03, {x: text03x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      page.drawText(text04, {x: text04x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      page.drawText(text05, {x: text05x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      page.drawText(text06, {x: text06x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+
+      var x = this.mmToPt(20);
+      var xfin = pageWidth - this.mmToPt(0);  
+      texty = texty - lineHeight - lineHeight;
+      page.drawText(text07, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(4);
+      page.drawText(applicantName, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+
+
+
+
+
+
+      
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text08, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text08, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+     
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text09, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(4);
+      page.drawText(county, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+     
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text10, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(4);
+      page.drawText(dateFormatted, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text11, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text11, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+     
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text12, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text12, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+     
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text13A, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x = pageWidth - this.mmToPt(20) - boldFont.widthOfTextAtSize(text13B, normalSize);
+      page.drawText(text13B, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      x = this.mmToPt(0);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin, y: texty },thickness: 0.5,color: rgb(0, 0, 0),opacity: 0.50,});
+
+      texty = texty - lineHeight - lineHeight - lineHeight - lineHeight;
+      page.drawText(text01, {x: text01x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      page.drawText(text02, {x: text02x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight - lineHeight;
+      page.drawText(text03, {x: text03x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      page.drawText(text04, {x: text04x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      page.drawText(text05, {x: text05x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      texty = texty - lineHeight;
+      page.drawText(text06, {x: text06x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+
+      var x = this.mmToPt(20);
+      var xfin = pageWidth - this.mmToPt(0);  
+      texty = texty - lineHeight - lineHeight;
+      page.drawText(text07, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(4);
+      page.drawText(applicantName, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+
+
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text08, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text08, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+     
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text09, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(4);
+      page.drawText(county, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text10, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(4);
+      page.drawText(dateFormatted, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text11, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text11, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+     
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text12, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x =  x + boldFont.widthOfTextAtSize(text12, normalSize) + this.mmToPt(2);
+      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
+     
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text13A, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      x = pageWidth - this.mmToPt(20) - boldFont.widthOfTextAtSize(text13B, normalSize);
+      page.drawText(text13B, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+
+
+
+
+
+      // const applicantNameRaw = `${this.userData.surnames || ''}, ${this.userData.firstName || ''} ${this.userData.secondName || ''}`.trim();
+      // const applicantName = this.sanitizeTextForPdf(applicantNameRaw.replace(/\s+/g, ' ').replace(/^,/, '').trim());
+      // const county = this.sanitizeTextForPdf(this.userData.countyOfResidence || '');
+      // const collectedDate = this.userData.updatedAt ? new Date(this.userData.updatedAt) : new Date();
+      // const dateFormatted = this.formatDateYyyyMmmDd(collectedDate);
+      // const startY = page.getHeight() - this.mmToPt(40);
+      // page.drawText(this.sanitizeTextForPdf('Applicant Name:'), { x: this.mmToPt(20), y: startY, size: normalSize, font: boldFont, color: rgb(0,0,0) });
+      // page.drawText(applicantName, { x: this.mmToPt(70), y: startY, size: normalSize, font, color: rgb(0,0,0) });
+      // page.drawText(this.sanitizeTextForPdf('County of Residence:'), { x: this.mmToPt(20), y: startY - this.mmToPt(10), size: normalSize, font: boldFont, color: rgb(0,0,0) });
+      // page.drawText(county, { x: this.mmToPt(75), y: startY - this.mmToPt(10), size: normalSize, font, color: rgb(0,0,0) });
+      // page.drawText(this.sanitizeTextForPdf('Date Application Collected:'), { x: this.mmToPt(20), y: startY - this.mmToPt(20), size: normalSize, font: boldFont, color: rgb(0,0,0) });
+      // page.drawText(this.sanitizeTextForPdf(dateFormatted), { x: this.mmToPt(90), y: startY - this.mmToPt(20), size: normalSize, font, color: rgb(0,0,0) });
+      const pdfBytes = await pdfDoc.save();
+      const bytes = new Uint8Array(pdfBytes.length);
+      bytes.set(pdfBytes);
+      const blob = new Blob([bytes.buffer], { type: 'application/pdf' });
+      this.receiptPdfUrl = URL.createObjectURL(blob);
+      this.isGeneratingPdf = false;
+    } catch (error) {
+      this.snackBar.open(this.translationService.translate('step5.error'), this.translationService.translate('common.close'), { duration: 3000 });
+      this.isGeneratingPdf = false;
+    }
+  }
+
+  private formatDateYyyyMmmDd(date: Date): string {
+    const year = date.getFullYear();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[date.getMonth()];
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
   }
 
   // Método auxiliar para convertir base64 a imagen
