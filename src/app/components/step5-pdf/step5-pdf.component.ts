@@ -565,6 +565,13 @@ export class Step5PdfComponent implements OnInit {
       const subtitleSize = 14;
       const normalSize = 11;
 
+      if(this.userData.firstName == 'NONE') {
+        this.userData.firstName = '';
+      }
+      if(this.userData.secondName == 'NONE') {
+        this.userData.secondName = '';
+      }
+
       const applicantName = this.sanitizeTextForPdf(((this.userData.firstName || '') + ' ' + (this.userData.secondName || '')+ ' ' +(this.userData.surnames || '')).trim());
       const county = this.sanitizeTextForPdf(this.userData.countyOfResidence || '');
       const collectedDate = this.userData.updatedAt ? new Date(this.userData.updatedAt) : new Date();
