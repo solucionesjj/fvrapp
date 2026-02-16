@@ -1,0 +1,14 @@
+services:
+  database:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongodb_container
+    ports:
+      - "38291:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME}
+      MONGODB_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD}
+volumes:
+  mongo_data:
