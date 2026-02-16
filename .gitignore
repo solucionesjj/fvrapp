@@ -26,3 +26,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+Database/.env
+Front/.DS_Store
+Front/src/.DS_Store
+Front/src/app/.DS_Store
+proxy/.env
