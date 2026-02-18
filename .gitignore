@@ -31,3 +31,4 @@ Front/.DS_Store
 Front/src/.DS_Store
 Front/src/app/.DS_Store
 proxy/.env
+proxy/node_modules/

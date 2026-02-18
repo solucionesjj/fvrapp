@@ -55,7 +55,6 @@ app.use('/', async (req, res) => {
     });
 
     console.log(`Forwarding request to: ${externalApiUrl}`);
-    console.log(`Request body: ${JSON.stringify(req.body)}`);
 
     const response = await axios.post(externalApiUrl, req.body, {
       headers: {

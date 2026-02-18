@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { UserData } from '../models/user-data.model';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { GoogleSheetsService } from './google-sheets.service';
-import { switchMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { switchMap, catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class DataStorageService {
   private readonly STORAGE_KEY = 'wizard_user_data';
   private userDataSubject = new BehaviorSubject<UserData | null>(null);
   
-  constructor(private googleSheetsService: GoogleSheetsService) {
+  constructor(private http: HttpClient) {
     // Cargar datos del localStorage al iniciar el servicio
     this.loadFromLocalStorage();
   }
@@ -118,72 +118,17 @@ export class DataStorageService {
     };
   }
   
-  /**
-   * Guarda los datos del usuario en Google Sheets
-   * Primero intenta autenticar al usuario si no está autenticado
-   */
   saveToDatabase(userData: UserData): Observable<boolean> {
-    console.log('Iniciando guardado en Google Sheets:', userData);
-    let userDataTemporal = JSON.parse(JSON.stringify(userData));
+    const userDataTemporal: UserData = JSON.parse(JSON.stringify(userData));
     userDataTemporal.signature = '';
     userDataTemporal.barcode = '';
-    return new Observable<boolean>((observer) => {
-      this.handleGoogleSheetsOperation(userDataTemporal, observer);
-    });
-  }
-
-  private async handleGoogleSheetsOperation(userData: UserData, observer: any): Promise<void> {
-    try {
-      // Verificar si la API está inicializada
-      const isInitialized = await this.googleSheetsService.isApiInitialized();
-      if (!isInitialized) {
-        console.error('Google Sheets API no está inicializada');
-        observer.next(false);
-        observer.complete();
-        return;
-      }
-
-      // Verificar si está autenticado
-      const isAuthenticated = await this.googleSheetsService.isAuthenticated();
-      if (!isAuthenticated) {
-        // Intentar autenticar
-        const signedIn = await this.googleSheetsService.signIn();
-        if (!signedIn) {
-          console.error('No se pudo autenticar con Google');
-          observer.next(false);
-          observer.complete();
-          return;
-        }
-      }
-
-      // Guardar los datos
-      this.googleSheetsService.saveToGoogleSheets(userData)
-        .pipe(
-          catchError((error) => {
-            console.error('Error guardando en Google Sheets:', error);
-            return of(false);
-          })
-        )
-        .subscribe({
-          next: (success) => {
-            if (success) {
-              console.log('Datos guardados exitosamente en Google Sheets');
-            } else {
-              console.error('Error al guardar en Google Sheets');
-            }
-            observer.next(success);
-            observer.complete();
-          },
-          error: (error) => {
-            console.error('Error en la operación:', error);
-            observer.next(false);
-            observer.complete();
-          }
-        });
-    } catch (error) {
-      console.error('Error en handleGoogleSheetsOperation:', error);
-      observer.next(false);
-      observer.complete();
-    }
+    const url = `${environment.apiUrl}/scans`;
+    return this.http.post(url, userDataTemporal).pipe(
+      map(() => true),
+      catchError(error => {
+        console.error('Error guardando en API:', error);
+        return of(false);
+      })
+    );
   }
 }
