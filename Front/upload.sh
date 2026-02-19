@@ -1,0 +1,1 @@
+sh ./deploy.sh fvrapp.soeasy.one 2121 root /var/www/html/fvrapp

@@ -28,7 +28,6 @@ async function getDb() {
   return mongoDb;
 }
 
-// Handle all POST requests under /api
 app.use('/', async (req, res) => {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method Not Allowed' });
@@ -39,7 +38,9 @@ app.use('/', async (req, res) => {
     const subPath = req.path.replace(/^\/+/, '');
     const targetPath = subPath || 'default';
     const base = process.env.APIURL || '';
-    const externalApiUrl = `${base.replace(/\/+$/,'')}/${targetPath}`.replace(/([^:]\/)\/+/g, '$1');
+    var externalApiUrl = `${base.replace(/\/+$/,'')}/${targetPath}`.replace(/([^:]\/)\/+/g, '$1');
+
+    externalApiUrl = externalApiUrl.replace("/api","");
 
     const db = await getDb();
     const collection = db.collection(targetPath);
