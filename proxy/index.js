@@ -43,7 +43,7 @@ app.use('/', async (req, res) => {
     externalApiUrl = externalApiUrl.replace("/api","");
 
     const db = await getDb();
-    const collection = db.collection(targetPath);
+    const collection = db.collection(targetPath.replace("api/",""));
     const insertResult = await collection.insertOne({
       ...req.body,
       _createdAt: new Date()
@@ -53,6 +53,9 @@ app.use('/', async (req, res) => {
     }).catch((error) => {
       console.error('Error inserting document:', error);
       throw error;
+    }).finally(() => {
+      mongoClient.close();
+      console.log('Conexión cerrada');
     });
 
     console.log(`Forwarding request to: ${externalApiUrl}`);
@@ -65,7 +68,6 @@ app.use('/', async (req, res) => {
     });
 
     res.status(response.status).json({
-      insertedId: insertResult.insertedId,
       proxyResponse: response.data
     });
 
