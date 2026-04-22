@@ -272,6 +272,13 @@ export class Step2BarcodeComponent implements OnInit, OnDestroy {
     }
   }
 
+  skipAndContinue(): void {
+    this.stopCamera();
+    setTimeout(() => {
+      this.router.navigate(['/step3']);
+    }, 100);
+  }
+
   confirmRestart(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',

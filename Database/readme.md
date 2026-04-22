@@ -35,7 +35,7 @@ db.createUser({
 use fvrapp;
 db.createUser({
   user: "proxyAppUser",
-  pwd: "LaMig2314##",
+  pwd: "LaMig2314",
   roles: [
     { role: "readWrite", db: "fvrapp" }
   ]

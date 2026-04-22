@@ -13,6 +13,10 @@ DB_PASSWORD="LaClaveCompleja"
 DB_HOST=localhost
 DB_PORT=38291
 DB_NAME=fvrapp
+# Control de flujo (true/false)
+SAVE_TO_MONGO=true
+FORWARD_REQUEST=false
+
 ```
 
 Para ambientes productivos se recomienda instalar los componentes de producción:

@@ -4,7 +4,7 @@
       <mat-card-title>{{ translationService.translate('step2.title') }}</mat-card-title>
       <mat-card-subtitle>{{ translationService.translate('step2.subtitle') }}</mat-card-subtitle>
     </mat-card-header>
-    
+
     <mat-card-content>
       <mat-tab-group>
         <mat-tab [label]="translationService.translate('step2.camera')">
@@ -15,43 +15,43 @@
                 {{ translationService.translate('step2.camera') }}
               </button>
             </div>
-            
+
             <div *ngIf="isCameraActive" class="video-container">
               <video #videoElement autoplay playsinline></video>
               <div class="scanner-overlay">
                 <div class="scanner-line"></div>
               </div>
             </div>
-            
+
             <div *ngIf="isScanning && isCameraActive" class="scanning-indicator">
               <mat-spinner diameter="30"></mat-spinner>
               <span>{{ translationService.translate('step2.scanning') }}</span>
             </div>
           </div>
         </mat-tab>
-        
+
         <mat-tab [label]="translationService.translate('step2.file')">
           <div class="upload-container">
             <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" style="display: none;">
-            
+
             <div *ngIf="!selectedImage && !scanResult" class="upload-placeholder">
               <button mat-raised-button color="primary" (click)="triggerFileInput()">
                 <mat-icon>file_upload</mat-icon>
                 {{ translationService.translate('step2.upload') }}
               </button>
             </div>
-            
+
             <div *ngIf="selectedImage" class="image-preview">
               <img [src]="selectedImage" alt="Imagen seleccionada">
             </div>
-            
+
             <div *ngIf="isScanning && !isCameraActive" class="scanning-indicator">
               <mat-spinner diameter="30"></mat-spinner>
               <span>{{ translationService.translate('step2.scanning') }}</span>
             </div>
           </div>
         </mat-tab>
-        
+
         <mat-tab [label]="translationService.translate('step2.bluetooth')">
           <div class="bluetooth-container">
             <div *ngIf="!isBluetoothListening && !scanResult" class="bluetooth-placeholder">
@@ -65,20 +65,20 @@
                   <li>{{ translationService.translate('step2.bluetooth_step3') }}</li>
                 </ul>
               </div>
-              
+
               <button mat-raised-button color="primary" (click)="startBluetoothListening()">
                 <mat-icon>bluetooth_searching</mat-icon>
                 {{ translationService.translate('step2.bluetooth_start') }}
               </button>
             </div>
-            
+
             <div *ngIf="isBluetoothListening" class="bluetooth-listening">
               <div class="listening-indicator">
                 <mat-icon class="pulse-icon">bluetooth_connected</mat-icon>
                 <h3>{{ translationService.translate('step2.bluetooth_listening') }}</h3>
                 <p>{{ translationService.translate('step2.bluetooth_waiting') }}</p>
               </div>
-              
+
               <div *ngIf="bluetoothInput" class="bluetooth-input-display">
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>{{ translationService.translate('step2.bluetooth_scanned') }}</mat-label>
@@ -86,7 +86,7 @@
                   <mat-icon matSuffix>qr_code_scanner</mat-icon>
                 </mat-form-field>
               </div>
-              
+
               <button mat-raised-button color="warn" (click)="stopBluetoothListening()">
                 <mat-icon>bluetooth_disabled</mat-icon>
                 {{ translationService.translate('step2.bluetooth_stop') }}
@@ -95,35 +95,37 @@
           </div>
         </mat-tab>
       </mat-tab-group>
-      
+
       <div *ngIf="scanError" class="error-message">
         <mat-icon color="warn">error</mat-icon>
         <span>{{ scanError }}</span>
         <div class="error-actions">
-           <button mat-button color="primary" (click)="startCamera()" *ngIf="scanError.includes('cámara') || scanError.includes('dispositivos')">
-             <mat-icon>refresh</mat-icon>
-             Reintentar cámara
-           </button>
-           <button mat-button color="primary" (click)="triggerFileInput()" *ngIf="scanError.includes('imagen') || scanError.includes('código de barras')">
-             <mat-icon>file_upload</mat-icon>
-             Probar otra imagen
-           </button>
-         </div>
-         
-         <!-- Consejos específicos para licencias de Florida -->
-         <div class="tips-container" *ngIf="scanError.includes('imagen') || scanError.includes('código de barras')">
-           <h4>💡 Consejos para licencias de Florida:</h4>
-           <ul>
-             <li><strong>Usa la parte posterior</strong> - El código PDF417 está en la parte trasera de la licencia</li>
-             <li><strong>Buena iluminación</strong> - Asegúrate de tener luz suficiente sin reflejos</li>
-             <li><strong>Mantén estable</strong> - No muevas la cámara ni la licencia durante el escaneo</li>
-             <li><strong>Distancia correcta</strong> - Mantén 15-20 cm entre la cámara y el código</li>
-             <li><strong>Ángulo perpendicular</strong> - La cámara debe estar directamente sobre el código</li>
-             <li><strong>Código completo</strong> - El código PDF417 (2D) debe estar completamente visible</li>
-           </ul>
-         </div>
+          <button mat-button color="primary" (click)="startCamera()"
+            *ngIf="scanError.includes('cámara') || scanError.includes('dispositivos')">
+            <mat-icon>refresh</mat-icon>
+            Reintentar cámara
+          </button>
+          <button mat-button color="primary" (click)="triggerFileInput()"
+            *ngIf="scanError.includes('imagen') || scanError.includes('código de barras')">
+            <mat-icon>file_upload</mat-icon>
+            Probar otra imagen
+          </button>
+        </div>
+
+        <!-- Consejos específicos para licencias de Florida -->
+        <div class="tips-container" *ngIf="scanError.includes('imagen') || scanError.includes('código de barras')">
+          <h4>💡 Consejos para licencias de Florida:</h4>
+          <ul>
+            <li><strong>Usa la parte posterior</strong> - El código PDF417 está en la parte trasera de la licencia</li>
+            <li><strong>Buena iluminación</strong> - Asegúrate de tener luz suficiente sin reflejos</li>
+            <li><strong>Mantén estable</strong> - No muevas la cámara ni la licencia durante el escaneo</li>
+            <li><strong>Distancia correcta</strong> - Mantén 15-20 cm entre la cámara y el código</li>
+            <li><strong>Ángulo perpendicular</strong> - La cámara debe estar directamente sobre el código</li>
+            <li><strong>Código completo</strong> - El código PDF417 (2D) debe estar completamente visible</li>
+          </ul>
+        </div>
       </div>
-      
+
       <div *ngIf="scanResult" class="result-container">
         <h3>{{ translationService.translate('step2.success') }}</h3>
         <!-- <div class="result-data">
@@ -137,17 +139,20 @@
         </div>
       </div>
     </mat-card-content>
-    
+
     <mat-card-actions class="main-actions">
       <button mat-button (click)="goBack()">
         {{ translationService.translate('nav.previous') }}
       </button>
       <span class="spacer"></span>
+      <button mat-button color="accent" (click)="skipAndContinue()">
+        {{ translationService.translate('nav.skip') }}
+      </button>
       <button mat-raised-button color="primary" [disabled]="!scanResult" (click)="saveAndContinue()">
         {{ translationService.translate('nav.next') }}
       </button>
     </mat-card-actions>
-    
+
     <mat-card-actions class="restart-action">
       <button mat-raised-button color="warn" (click)="confirmRestart()">
         <mat-icon>refresh</mat-icon>

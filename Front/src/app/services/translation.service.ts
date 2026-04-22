@@ -11,34 +11,35 @@ export interface Translations {
 })
 export class TranslationService {
   private currentLanguage = signal<Language>('en');
-  
+
   private translations: Record<Language, Translations> = {
     es: {
       // App general
       'app.title': 'Solicitud de registro de votantes de Florida',
       'app.footer': 'Aplicación de Registro',
-      
+
       // Navigation
       'nav.previous': 'Anterior',
       'nav.next': 'Siguiente',
       'nav.restart': 'Reiniciar proceso',
-      
+      'nav.skip': 'Saltar',
+
       // Common
       'common.yes': 'Sí',
       'common.no': 'No',
       'common.close': 'Cerrar',
       'common.restart': 'Reiniciar proceso',
-      
+
       // Step 1
       'step1.title': 'Consentimiento para el registro de votantes',
       'step1.subtitle': 'Por favor revise y firme para comenzar su registro.',
       'step1.signature': 'Firma digital *',
       'step1.clear': 'Borrar firma',
-      'step1.consent.title':'Doy mi consentimiento para la recopilación y el procesamiento de datos.',
+      'step1.consent.title': 'Doy mi consentimiento para la recopilación y el procesamiento de datos.',
       'step1.consent': 'Entiendo que mi información se utilizará para fines de registro de votantes de acuerdo con la ley del estado de Florida.',
       'step1.error': 'Por favor, proporcione su firma antes de continuar.',
       'step1.nav.next': 'Continuar con elegibilidad',
-      
+
       // Step 2
       'step2.title': 'Escanee su licencia de conducir o identificación',
       'step2.subtitle': 'Cargue o tome una fotografía de su licencia de conducir o tarjeta de identificación estatal',
@@ -83,7 +84,13 @@ export class TranslationService {
       'step3.phone.label': 'Teléfono celular',
       'step3.phone.placeholder': '(555) 123-4567',
       'step3.error': 'Por favor, seleccione un condado de residencia.',
-      
+      'step3.license.title': 'Número de Licencia de Conducir o Tarjeta de Identificación de Florida',
+      'step3.firstName.title': 'Nombre',
+      'step3.surnames.title': 'Apellidos',
+      'step3.dateOfBirth.title': 'Fecha de Nacimiento',
+      'step3.sex.title': 'Género',
+      'step3.address.title': 'Dirección',
+      'step3.postalCode.title': 'Código Postal',
       // Step 4
 
       'step4.title': 'Revise su información',
@@ -118,7 +125,7 @@ export class TranslationService {
       'step4.processing': 'Procesando...',
       'step4.success': 'Datos enviados correctamente',
       'step4.error': 'Error al enviar los datos',
-      
+
 
       // Step 5
       'step5.title': 'Fin del proceso',
@@ -132,17 +139,17 @@ export class TranslationService {
       'step5.error': 'No hay datos disponibles para generar el PDF. Por favor, complete los pasos anteriores.',
       'step5.generate_pdf': 'Generar PDF',
       'step5.generate_receipt': 'Ver Recibo',
-      
+
       // Confirm Dialog
       'confirm.title': 'Confirmar reinicio',
       'confirm.message': '¿Está seguro de que desea reiniciar el proceso? Se perderán todos los datos ingresados.',
       'confirm.cancel': 'Cancelar',
       'confirm.confirm': 'Confirmar',
-      
+
       // Dialog
       'dialog.restart.title': 'Confirmar reinicio',
       'dialog.restart.message': '¿Está seguro de que desea reiniciar el proceso? Se perderán todos los datos ingresados.',
-      
+
       // Language
       'language.spanish': 'Español',
       'language.english': 'English'
@@ -151,28 +158,29 @@ export class TranslationService {
       // App general
       'app.title': 'Florida Voter Registration Application',
       'app.footer': 'Registration Application',
-      
+
       // Navigation
       'nav.previous': 'Previous',
       'nav.next': 'Next',
       'nav.restart': 'Restart Process',
-      
+      'nav.skip': 'Skip',
+
       // Common
       'common.yes': 'Yes',
       'common.no': 'No',
       'common.close': 'Close',
       'common.restart': 'Restart process',
-      
+
       // Step 1
       'step1.title': 'Voter Registration Consent',
       'step1.subtitle': 'Please review and sign to begin your registration',
       'step1.signature': 'Digital signature *',
       'step1.clear': 'Clear signature',
-      'step1.consent.title':'I consent to data collection and processing',
+      'step1.consent.title': 'I consent to data collection and processing',
       'step1.consent': 'I understand that my information will be used for voter registration purposes in accordance with Florida state law.',
       'step1.error': 'Please provide your signature before continuing.',
       'step1.nav.next': 'Continue to eligibility',
-      
+
       // Step 2
       'step2.title': 'Scan your driver license or ID',
       'step2.subtitle': 'Please upload or take a photo of your driver license or state ID card',
@@ -198,7 +206,7 @@ export class TranslationService {
       'step2.bluetooth_waiting': 'Scan the barcode with your Bluetooth device',
       'step2.bluetooth_scanned': 'Scanned code',
       'step2.bluetooth_stop': 'Deactivate Scanner',
-      
+
       // Step 3
       'step3.title': 'Eligibility Questions',
       'step3.subtitle': 'Please fill out the following information.',
@@ -217,7 +225,14 @@ export class TranslationService {
       'step3.phone.label': 'Cell phone number',
       'step3.phone.placeholder': '(555) 123-4567',
       'step3.error': 'Please select a county of residence.',
-      
+      'step3.license.title': 'Florida Driver License or ID Card Number',
+      'step3.firstName.title': 'Name',
+      'step3.surnames.title': 'Surnames',
+      'step3.dateOfBirth.title': 'Date of Birth',
+      'step3.sex.title': 'Sex',
+      'step3.address.title': 'Address',
+      'step3.postalCode.title': 'Zip Code',
+
       // Step 4
       'step4.title': 'Review Your Information',
       'step4.subtitle': 'Review the information before continue the process',
@@ -251,7 +266,7 @@ export class TranslationService {
       'step4.processing': 'Processing...',
       'step4.success': 'Data sent successfully',
       'step4.error': 'Error sending data',
-      
+
       // Step 5
       'step5.title': 'End of the process',
       'step5.subtitle': 'Completion of the process',
@@ -266,23 +281,23 @@ export class TranslationService {
       'step5.error': 'No data available to generate PDF. Please complete the previous steps.',
       'step5.generate_pdf': 'Generate PDF',
       'step5.generate_receipt': 'View Receipt',
-      
+
       // Confirm Dialog
       'confirm.title': 'Confirm restart',
       'confirm.message': 'Are you sure you want to restart the process? All entered data will be lost.',
       'confirm.cancel': 'Cancel',
       'confirm.confirm': 'Confirm',
-      
+
       // Dialog
       'dialog.restart.title': 'Confirm restart',
       'dialog.restart.message': 'Are you sure you want to restart the process? All entered data will be lost.',
-      
+
       // Language
       'language.spanish': 'Español',
       'language.english': 'English'
     }
   };
-  
+
   constructor() {
     // Load saved language from localStorage
     const savedLanguage = localStorage.getItem('app-language') as Language;
@@ -290,21 +305,21 @@ export class TranslationService {
       this.currentLanguage.set(savedLanguage);
     }
   }
-  
+
   getCurrentLanguage() {
     return this.currentLanguage();
   }
-  
+
   setLanguage(language: Language) {
     this.currentLanguage.set(language);
     localStorage.setItem('app-language', language);
   }
-  
+
   translate(key: string): string {
     const translation = this.translations[this.currentLanguage()][key];
     return translation || key;
   }
-  
+
   // Computed signal for reactive translations
   t(key: string) {
     return () => this.translate(key);

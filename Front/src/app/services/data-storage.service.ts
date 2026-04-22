@@ -11,41 +11,41 @@ import { environment } from '../../environments/environment';
 export class DataStorageService {
   private readonly STORAGE_KEY = 'wizard_user_data';
   private userDataSubject = new BehaviorSubject<UserData | null>(null);
-  
+
   constructor(private http: HttpClient) {
     // Cargar datos del localStorage al iniciar el servicio
     this.loadFromLocalStorage();
   }
-  
+
   /**
    * Obtiene los datos actuales del usuario como Observable
    */
   getUserData(): Observable<UserData | null> {
     return this.userDataSubject.asObservable();
   }
-  
+
   /**
    * Obtiene los datos actuales del usuario como valor directo
    */
   getUserDataValue(): UserData | null {
     return this.userDataSubject.value;
   }
-  
+
   /**
    * Actualiza los datos del usuario y los guarda en localStorage
    */
   updateUserData(data: Partial<UserData>): void {
-    
+
     const currentData = this.userDataSubject.value || this.getEmptyUserData();
     const updatedData = { ...currentData, ...data, updatedAt: new Date() };
-    
+
     // Guardar en localStorage
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedData));
     console.log('UserData', updatedData);
     // Actualizar el BehaviorSubject
     this.userDataSubject.next(updatedData);
   }
-  
+
   /**
    * Limpia todos los datos del usuario
    */
@@ -53,13 +53,13 @@ export class DataStorageService {
     localStorage.removeItem(this.STORAGE_KEY);
     this.userDataSubject.next(null);
   }
-  
+
   /**
    * Carga los datos del localStorage
    */
   private loadFromLocalStorage(): void {
     const storedData = localStorage.getItem(this.STORAGE_KEY);
-    
+
     if (storedData) {
       try {
         const userData = JSON.parse(storedData) as UserData;
@@ -70,7 +70,7 @@ export class DataStorageService {
       }
     }
   }
-  
+
   /**
    * Crea un objeto UserData vacío con valores por defecto
    */
@@ -117,11 +117,13 @@ export class DataStorageService {
       updatedAt: new Date()
     };
   }
-  
+
   saveToDatabase(userData: UserData): Observable<boolean> {
     const userDataTemporal: UserData = JSON.parse(JSON.stringify(userData));
-    userDataTemporal.signature = '';
-    userDataTemporal.barcode = '';
+    //JJM - 2026-Apr-21
+    //Se solicita retirar la limpieza de estos campos para guardar la info completa
+    //userDataTemporal.signature = '';
+    //userDataTemporal.barcode = '';
     const url = `${environment.apiUrl}/scans`;
     return this.http.post(url, userDataTemporal).pipe(
       map(() => true),

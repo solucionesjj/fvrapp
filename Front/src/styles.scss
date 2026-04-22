@@ -191,6 +191,28 @@ body {
   color: #3f51b5 !important;
 }
 
+/* Estilos globales para Datepicker y Select */
+.mat-datepicker-content {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+}
+
+.mat-calendar {
+  background-color: #ffffff !important;
+}
+
+.mat-mdc-select-panel {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: #1976d2 !important;
+  color: #ffffff !important;
+}
+
 /* Estilos para dispositivos táctiles */
 @media (max-width: 768px) {
   .mat-button, .mat-raised-button, .mat-stroked-button, .mat-flat-button {

@@ -4,7 +4,7 @@
       <mat-card-title>{{ translationService.translate('step3.title') }}</mat-card-title>
       <mat-card-subtitle>{{ translationService.translate('step3.subtitle') }}</mat-card-subtitle>
     </mat-card-header>
-    
+
     <mat-card-content>
       <!-- <div class="question-container">
          <h3>{{ translationService.translate('step3.question1.title') }}</h3> 
@@ -32,39 +32,97 @@
           <mat-radio-button [value]="false">{{ translationService.translate('common.no') }}</mat-radio-button>
         </mat-radio-group>
       </div> -->
-      
+
+      <div class="question-container">
+        <p>Personal Information (Optional)</p>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>
+            {{ translationService.translate('step3.license.title') }}
+          </mat-label>
+          <input matInput [(ngModel)]="licenseCode" placeholder="License Code">
+        </mat-form-field>
+
+        <div class="flex-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>
+              {{ translationService.translate('step3.firstName.title') }}
+            </mat-label>
+            <input matInput [(ngModel)]="firstName" placeholder="First Name">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>
+              {{ translationService.translate('step3.surnames.title') }}
+            </mat-label>
+            <input matInput [(ngModel)]="surnames" placeholder="Surnames">
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>
+            {{ translationService.translate('step3.dateOfBirth.title') }}
+          </mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="dateOfBirthObj" placeholder="Nov/11/1993">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>
+            {{ translationService.translate('step3.sex.title') }}
+          </mat-label>
+          <mat-select [(ngModel)]="sex">
+            <mat-option value="1">Male</mat-option>
+            <mat-option value="0">Female</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>
+            {{ translationService.translate('step3.address.title') }}
+          </mat-label>
+          <input matInput [(ngModel)]="address" placeholder="Address">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>
+            {{ translationService.translate('step3.postalCode.title') }}
+          </mat-label>
+          <input matInput [(ngModel)]="postalCode" placeholder="Zip Code">
+        </mat-form-field>
+      </div>
+
       <div class="question-container">
         <p>{{ translationService.translate('step3.county.title') }}</p>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ translationService.translate('step3.county.label') }}</mat-label>
-          <input matInput 
-                 [formControl]="countyControl"
-                 [matAutocomplete]="countyAuto" 
-                 [placeholder]="translationService.translate('step3.county.placeholder')">
-          <mat-autocomplete #countyAuto="matAutocomplete" 
-                           [panelWidth]="'auto'" 
-                           class="county-autocomplete"> 
-            <mat-option *ngFor="let county of filteredCounties | async" [value]="county">
-              {{ county }}
+          <input matInput [formControl]="countyControl" [matAutocomplete]="countyAuto"
+            [placeholder]="translationService.translate('step3.county.placeholder')">
+          <mat-autocomplete #countyAuto="matAutocomplete" [panelWidth]="'auto'" class="county-autocomplete">
+            <mat-option *ngFor="let location of filteredLocations | async" [value]="location.display">
+              {{ location.display }}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
       </div>
-      
+
       <div class="question-container">
         <p>{{ translationService.translate('step3.email.title') }}</p>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ translationService.translate('step3.email.label') }}</mat-label>
-          <input matInput type="email" [(ngModel)]="email" [placeholder]="translationService.translate('step3.email.placeholder')">
+          <input matInput type="email" [(ngModel)]="email"
+            [placeholder]="translationService.translate('step3.email.placeholder')">
         </mat-form-field>
-        
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ translationService.translate('step3.phone.label') }}</mat-label>
-          <input matInput type="tel" [(ngModel)]="phoneNumber" [placeholder]="translationService.translate('step3.phone.placeholder')">
+          <input matInput type="tel" [(ngModel)]="phoneNumber"
+            [placeholder]="translationService.translate('step3.phone.placeholder')">
         </mat-form-field>
       </div>
     </mat-card-content>
-    
+
     <mat-card-actions class="main-actions">
       <button mat-button (click)="goBack()">
         {{ translationService.translate('nav.previous') }}
@@ -74,7 +132,7 @@
         {{ translationService.translate('nav.next') }}
       </button>
     </mat-card-actions>
-    
+
     <mat-card-actions class="restart-action">
       <button mat-raised-button color="warn" (click)="confirmRestart()">
         <mat-icon>refresh</mat-icon>

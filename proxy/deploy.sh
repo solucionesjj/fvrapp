@@ -3,7 +3,7 @@
 # Variables de configuración
 USER="root"
 HOST="www.soeasy.one"
-PORT="2121"  # <--- Tu puerto personalizado
+PORT="2121"
 REMOTE_PATH="/var/www/html/fvrappProxy"
 TIMESTAMP=$(date +"%Y%m%d%H%M%S")
 

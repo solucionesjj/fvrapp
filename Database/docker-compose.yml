@@ -1,5 +1,6 @@
 services:
   database:
+    env_file: .env
     image: mongodb/mongodb-community-server:latest
     container_name: mongodb_container
     ports:

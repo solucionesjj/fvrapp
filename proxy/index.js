@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const mongoUri=`mongodb://${process.env.DB_USER}:${encodeURIComponent(process.env.DB_PASSWORD)}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+const mongoUri = `mongodb://${process.env.DB_USER}:${encodeURIComponent(process.env.DB_PASSWORD)}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
 const mongoDbName = process.env.DB_NAME || '';
 
 let mongoClient;
@@ -35,41 +35,54 @@ app.use('/', async (req, res) => {
   }
 
   try {
+    // Variables de control leídas desde el .env
+    const SAVE_TO_MONGO = process.env.SAVE_TO_MONGO === 'true';
+    const FORWARD_REQUEST = process.env.FORWARD_REQUEST === 'true';
+
     const subPath = req.path.replace(/^\/+/, '');
     const targetPath = subPath || 'default';
     const base = process.env.APIURL || '';
-    var externalApiUrl = `${base.replace(/\/+$/,'')}/${targetPath}`.replace(/([^:]\/)\/+/g, '$1');
+    var externalApiUrl = `${base.replace(/\/+$/, '')}/${targetPath}`.replace(/([^:]\/)\/+/g, '$1');
 
-    externalApiUrl = externalApiUrl.replace("/api","");
+    externalApiUrl = externalApiUrl.replace("/api", "");
 
-    const db = await getDb();
-    const collection = db.collection(targetPath.replace("api/",""));
-    const insertResult = await collection.insertOne({
-      ...req.body,
-      _createdAt: new Date()
-    }).then((result) => {
-      console.log(`(MongoDB) Inserted document with ID: ${result.insertedId}`);
-      return result;
-    }).catch((error) => {
-      console.error('Error inserting document:', error);
-      throw error;
-    }).finally(() => {
-      mongoClient.close();
-      console.log('Conexión cerrada');
-    });
+    if (SAVE_TO_MONGO) {
+      const db = await getDb();
+      const collection = db.collection(targetPath.replace("api/", ""));
+      const insertResult = await collection.insertOne({
+        ...req.body,
+        _createdAt: new Date()
+      }).then((result) => {
+        console.log(`(MongoDB) Inserted document with ID: ${result.insertedId}`);
+        return result;
+      }).catch((error) => {
+        console.error('Error inserting document:', error);
+        throw error;
+      });
+    } else {
+      console.log('(MongoDB) Guardado en base de datos omitido por configuración.');
+    }
 
-    console.log(`Forwarding request to: ${externalApiUrl}`);
+    if (FORWARD_REQUEST) {
+      console.log(`Forwarding request to: ${externalApiUrl}`);
 
-    const response = await axios.post(externalApiUrl, req.body, {
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.API_KEY
-      }
-    });
+      const response = await axios.post(externalApiUrl, req.body, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.API_KEY
+        }
+      });
 
-    res.status(response.status).json({
-      proxyResponse: response.data
-    });
+      res.status(response.status).json({
+        proxyResponse: response.data
+      });
+    } else {
+      console.log(`(Proxy) Reenvío de petición a ${externalApiUrl} omitido por configuración.`);
+      res.status(200).json({
+        message: 'Petición procesada exitosamente (reenvío omitido por configuración)',
+        simulated: true
+      });
+    }
 
   } catch (error) {
     console.error('Proxy Error:', error.message);
