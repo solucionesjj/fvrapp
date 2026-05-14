@@ -26,8 +26,7 @@ export class CustomDateAdapter extends NativeDateAdapter {
   override format(date: Date, displayFormat: Object): string {
     if (displayFormat === 'input') {
       const day = date.getDate().toString().padStart(2, '0');
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const month = monthNames[date.getMonth()];
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const year = date.getFullYear();
       return `${month}/${day}/${year}`;
     }
@@ -36,49 +35,57 @@ export class CustomDateAdapter extends NativeDateAdapter {
 
   override parse(value: any): Date | null {
     if (!value) return null;
-    
+
     if (value instanceof Date) return value;
-    
+
     if (typeof value === 'string') {
       // Remover espacios
       value = value.trim();
-      
-      // Intentar parsear formato "Mon/DD/YYYY" o "MonDDYYYY"
+
       const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      
-      let monthStr = '';
+
+      let monthIndex = -1;
       let dayStr = '';
       let yearStr = '';
-      
-      // Primero intentar con separadores: "Mar/01/1988"
-      const withSeparators = /^([A-Za-z]{3})\/(\d{1,2})\/(\d{4})$/.exec(value);
-      if (withSeparators) {
-        monthStr = withSeparators[1];
-        dayStr = withSeparators[2];
-        yearStr = withSeparators[3];
+
+      // Intentar parsear formatos con mes de texto: "Mar/01/1988" o "Mar011988"
+      const textWithSeparators = /^([A-Za-z]{3})\/(\d{1,2})\/(\d{4})$/.exec(value);
+      const textWithoutSeparators = /^([A-Za-z]{3})(\d{2})(\d{4})$/.exec(value);
+
+      if (textWithSeparators) {
+        monthIndex = monthNames.findIndex(m => m.toLowerCase() === textWithSeparators[1].toLowerCase());
+        dayStr = textWithSeparators[2];
+        yearStr = textWithSeparators[3];
+      } else if (textWithoutSeparators) {
+        monthIndex = monthNames.findIndex(m => m.toLowerCase() === textWithoutSeparators[1].toLowerCase());
+        dayStr = textWithoutSeparators[2];
+        yearStr = textWithoutSeparators[3];
       } else {
-        // Intentar sin separadores: "Mar011988"
-        const withoutSeparators = /^([A-Za-z]{3})(\d{2})(\d{4})$/.exec(value);
-        if (withoutSeparators) {
-          monthStr = withoutSeparators[1];
-          dayStr = withoutSeparators[2];
-          yearStr = withoutSeparators[3];
+        // Intentar parsear formatos numéricos: "03/06/1982" o "03061982"
+        const numericWithSeparators = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(value);
+        const numericWithoutSeparators = /^(\d{2})(\d{2})(\d{4})$/.exec(value);
+
+        if (numericWithSeparators) {
+          monthIndex = parseInt(numericWithSeparators[1], 10) - 1;
+          dayStr = numericWithSeparators[2];
+          yearStr = numericWithSeparators[3];
+        } else if (numericWithoutSeparators) {
+          monthIndex = parseInt(numericWithoutSeparators[1], 10) - 1;
+          dayStr = numericWithoutSeparators[2];
+          yearStr = numericWithoutSeparators[3];
         }
       }
-      
-      if (monthStr && dayStr && yearStr) {
-        const monthIndex = monthNames.findIndex(m => m.toLowerCase() === monthStr.toLowerCase());
-        if (monthIndex !== -1) {
-          const day = parseInt(dayStr, 10);
-          const year = parseInt(yearStr, 10);
-          
-          if (day >= 1 && day <= 31 && year >= 1900 && year <= 2100) {
-            return new Date(year, monthIndex, day);
-          }
+
+      if (monthIndex >= 0 && dayStr && yearStr) {
+        const day = parseInt(dayStr, 10);
+        const year = parseInt(yearStr, 10);
+
+        if (day >= 1 && day <= 31 && year >= 1900 && year <= 2100) {
+          return new Date(year, monthIndex, day);
         }
       }
     }
-    
+
     return super.parse(value);
   }
 }
