@@ -1,0 +1,25 @@
+<div class="login-wrapper">
+  <mat-card class="login-card">
+<mat-card-title>{{ translationService.translate('login.title') }}</mat-card-title>
+  <mat-card-content>
+      <form #loginForm="ngForm" (ngSubmit)="submit()" class="login-form">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ translationService.translate('login.email.label') }}</mat-label>
+          <input matInput type="email" name="email" [(ngModel)]="email" required autocomplete="username" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ translationService.translate('login.password.label') }}</mat-label>
+          <input matInput type="password" name="password" [(ngModel)]="password" required autocomplete="current-password" />
+        </mat-form-field>
+
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="loading">
+          <mat-icon *ngIf="loading" class="spinner">autorenew</mat-icon>
+          {{ loading ? translationService.translate('login.loading') : translationService.translate('login.submit') }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

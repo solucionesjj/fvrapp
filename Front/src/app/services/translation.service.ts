@@ -29,6 +29,18 @@ export class TranslationService {
       'common.no': 'No',
       'common.close': 'Cerrar',
       'common.restart': 'Reiniciar proceso',
+      'app.logout': 'Salir',
+
+      // Login
+      'login.title': 'Inicio de sesión',
+      'login.email.label': 'Correo electrónico',
+      'login.password.label': 'Contraseña',
+      'login.submit': 'Ingresar',
+      'login.loading': 'Ingresando...',
+      'login.error.required': 'Email y contraseña son obligatorios',
+      'login.error.invalidCredentials': 'Credenciales inválidas',
+      'login.error.disabled': 'Cuenta deshabilitada',
+      'login.error.generic': 'Ocurrió un error durante el inicio de sesión',
 
       // Step 1
       'step1.title': 'Consentimiento para el registro de votantes',
@@ -36,9 +48,11 @@ export class TranslationService {
       'step1.signature': 'Firma digital *',
       'step1.clear': 'Borrar firma',
       'step1.consent.title': 'Doy mi consentimiento para la recopilación y el procesamiento de datos.',
-      'step1.consent': 'Entiendo que mi información se utilizará para fines de registro de votantes de acuerdo con la ley del estado de Florida.',
+      'step1.consent': 'Entiendo que mi información se utilizará para fines de registro de votantes de acuerdo con la ley del estado de Florida. También acepto recibir un SMS aproximadamente 21 días después de mi registro para confirmar si recibí mi tarjeta de registro de votante.',
       'step1.error': 'Por favor, proporcione su firma antes de continuar.',
       'step1.nav.next': 'Continuar con elegibilidad',
+      'step1.noSignature.title': 'Continuar sin firma',
+      'step1.noSignature.message': '¿Desea continuar sin firmar el consentimiento?',
 
       // Step 2
       'step2.title': 'Escanee su licencia de conducir o identificación',
@@ -170,6 +184,18 @@ export class TranslationService {
       'common.no': 'No',
       'common.close': 'Close',
       'common.restart': 'Restart process',
+      'app.logout': 'Logout',
+
+      // Login
+      'login.title': 'Sign in',
+      'login.email.label': 'Email',
+      'login.password.label': 'Password',
+      'login.submit': 'Sign in',
+      'login.loading': 'Signing in...',
+      'login.error.required': 'Email and password are required',
+      'login.error.invalidCredentials': 'Invalid credentials',
+      'login.error.disabled': 'Account disabled',
+      'login.error.generic': 'An error occurred during sign in',
 
       // Step 1
       'step1.title': 'Voter Registration Consent',
@@ -177,9 +203,11 @@ export class TranslationService {
       'step1.signature': 'Digital signature *',
       'step1.clear': 'Clear signature',
       'step1.consent.title': 'I consent to data collection and processing',
-      'step1.consent': 'I understand that my information will be used for voter registration purposes in accordance with Florida state law.',
+      'step1.consent': 'I understand that my information will be used for voter registration purposes in accordance with Florida state law. I also agree to receive one SMS approximately 21 days after my registration to confirm whether I received my voter registration card.',
       'step1.error': 'Please provide your signature before continuing.',
       'step1.nav.next': 'Continue to eligibility',
+      'step1.noSignature.title': 'Continue without signature',
+      'step1.noSignature.message': 'Do you want to continue without signing the consent?',
 
       // Step 2
       'step2.title': 'Scan your driver license or ID',

@@ -34,7 +34,7 @@
     
     <mat-card-actions class="main-actions">
       <span class="spacer"></span>
-      <button mat-raised-button color="primary" [disabled]="!consent || isSignatureEmptyFlag" (click)="saveAndContinue()">
+      <button mat-raised-button color="primary" [disabled]="!consent" (click)="saveAndContinue()">
         {{ translationService.translate('step1.nav.next') }}
       </button>
     </mat-card-actions>

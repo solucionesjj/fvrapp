@@ -28,7 +28,7 @@ db.createUser({
   user: "globalAdmin",
   pwd: "???", 
   roles: [ { role: "root", db: "admin" } ]
-})
+});
 ```
 
 ```Mongo

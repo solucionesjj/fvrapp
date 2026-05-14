@@ -131,23 +131,40 @@ export class Step1SignatureComponent implements OnInit, AfterViewInit {
   }
   
   saveAndContinue(): void {
-    // Verificar que haya consentimiento
+    // Verificar que haya consentimiento (obligatorio)
     if (!this.consent) {
-      this.signatureError = true;
-      return;
-    }
-    
-    // Verificar que haya una firma
-    if (this.isSignatureEmptyFlag) {
       this.signatureError = true;
       return;
     }
     
     this.signatureError = false;
     
+    // Si no hay firma, mostrar diálogo de confirmación
+    if (this.isSignatureEmptyFlag) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: this.translationService.translate('step1.noSignature.title'),
+          message: this.translationService.translate('step1.noSignature.message')
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // Usuario confirmó que quiere continuar sin firma
+          this.proceedToNextStep();
+        }
+      });
+    } else {
+      // Hay firma, continuar sin preguntar
+      this.proceedToNextStep();
+    }
+  }
+
+  private proceedToNextStep(): void {
     // Guardar datos
     this.dataStorageService.updateUserData({
-      signature: this.signaturePad.toDataURL(),
+      signature: this.signaturePad.isEmpty() ? '' : this.signaturePad.toDataURL(),
       consent: this.consent
     });
     

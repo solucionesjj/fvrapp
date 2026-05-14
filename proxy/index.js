@@ -38,30 +38,39 @@ app.use('/', async (req, res) => {
     // Variables de control leídas desde el .env
     const SAVE_TO_MONGO = process.env.SAVE_TO_MONGO === 'true';
     const FORWARD_REQUEST = process.env.FORWARD_REQUEST === 'true';
-
     const subPath = req.path.replace(/^\/+/, '');
     const targetPath = subPath || 'default';
     const base = process.env.APIURL || '';
     var externalApiUrl = `${base.replace(/\/+$/, '')}/${targetPath}`.replace(/([^:]\/)\/+/g, '$1');
 
+    console.log(`Forwarding to: ${externalApiUrl}`);
+
     externalApiUrl = externalApiUrl.replace("/api", "");
 
-    if (SAVE_TO_MONGO) {
-      const db = await getDb();
-      const collection = db.collection(targetPath.replace("api/", ""));
-      const insertResult = await collection.insertOne({
-        ...req.body,
-        _createdAt: new Date()
-      }).then((result) => {
-        console.log(`(MongoDB) Inserted document with ID: ${result.insertedId}`);
-        return result;
-      }).catch((error) => {
-        console.error('Error inserting document:', error);
-        throw error;
-      });
-    } else {
-      console.log('(MongoDB) Guardado en base de datos omitido por configuración.');
+    try {
+      if (SAVE_TO_MONGO) {
+        if (!targetPath.includes("auth")) {
+          const db = await getDb();
+          const collection = db.collection(targetPath.replace("api/", ""));
+          const insertResult = await collection.insertOne({
+            ...req.body,
+            _createdAt: new Date()
+          }).then((result) => {
+            console.log(`(MongoDB) Inserted document with ID: ${result.insertedId}`);
+            return result;
+          }).catch((error) => {
+            console.error('Error inserting document:', error);
+            throw error;
+          });
+        }
+        } else {
+          console.log('(MongoDB) Guardado en base de datos omitido por configuración.');
+        }
+    } catch (error) {
+      console.error('Mongo Error...', error.message);
     }
+
+
 
     if (FORWARD_REQUEST) {
       console.log(`Forwarding request to: ${externalApiUrl}`);
@@ -86,9 +95,9 @@ app.use('/', async (req, res) => {
 
   } catch (error) {
     console.error('Proxy Error:', error.message);
-    res.status(error.response?.status || 500).json({
+    res.status((error.response && error.response.status) || 500).json({
       error: 'Proxy Error',
-      details: error.response?.data || error.message
+      details: (error.response && error.response.data) || error.message
     });
   }
 });

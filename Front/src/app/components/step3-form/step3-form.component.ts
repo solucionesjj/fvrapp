@@ -33,6 +33,54 @@ export class CustomDateAdapter extends NativeDateAdapter {
     }
     return date.toDateString();
   }
+
+  override parse(value: any): Date | null {
+    if (!value) return null;
+    
+    if (value instanceof Date) return value;
+    
+    if (typeof value === 'string') {
+      // Remover espacios
+      value = value.trim();
+      
+      // Intentar parsear formato "Mon/DD/YYYY" o "MonDDYYYY"
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      let monthStr = '';
+      let dayStr = '';
+      let yearStr = '';
+      
+      // Primero intentar con separadores: "Mar/01/1988"
+      const withSeparators = /^([A-Za-z]{3})\/(\d{1,2})\/(\d{4})$/.exec(value);
+      if (withSeparators) {
+        monthStr = withSeparators[1];
+        dayStr = withSeparators[2];
+        yearStr = withSeparators[3];
+      } else {
+        // Intentar sin separadores: "Mar011988"
+        const withoutSeparators = /^([A-Za-z]{3})(\d{2})(\d{4})$/.exec(value);
+        if (withoutSeparators) {
+          monthStr = withoutSeparators[1];
+          dayStr = withoutSeparators[2];
+          yearStr = withoutSeparators[3];
+        }
+      }
+      
+      if (monthStr && dayStr && yearStr) {
+        const monthIndex = monthNames.findIndex(m => m.toLowerCase() === monthStr.toLowerCase());
+        if (monthIndex !== -1) {
+          const day = parseInt(dayStr, 10);
+          const year = parseInt(yearStr, 10);
+          
+          if (day >= 1 && day <= 31 && year >= 1900 && year <= 2100) {
+            return new Date(year, monthIndex, day);
+          }
+        }
+      }
+    }
+    
+    return super.parse(value);
+  }
 }
 
 export const CUSTOM_DATE_FORMATS = {
@@ -162,7 +210,7 @@ export class Step3FormComponent implements OnInit {
     { city: 'Trenton', county: 'Gilchrist', display: 'Trenton, Gilchrist' },
     { city: 'Vero Beach', county: 'Indian River', display: 'Vero Beach, Indian River' },
     { city: 'Wauchula', county: 'Hardee', display: 'Wauchula, Hardee' },
-    { city: 'West Palm Beach', county: 'Palm Beach', display: 'West Palm Beach, Palm Beach' },
+    { city: 'Palm Beach', county: 'Palm Beach', display: 'Palm Beach' },
     { city: 'Wewahitchka', county: 'Gulf', display: 'Wewahitchka, Gulf' }
   ];
   
@@ -278,6 +326,30 @@ export class Step3FormComponent implements OnInit {
     const y = date.getFullYear().toString();
     return `${m}${d}${y}`;
   }
+
+  formatPhoneNumber(): void {
+    // Remover todos los caracteres que no sean números
+    const cleaned = this.phoneNumber.replace(/\D/g, '');
+    
+    // Limitar a 11 dígitos (1 + 10 dígitos de teléfono US)
+    if (cleaned.length > 11) {
+      this.phoneNumber = cleaned.substring(0, 11);
+      return;
+    }
+    
+    // Formatear: +1 (ABC) DEF-GHIJ
+    if (cleaned.length === 0) {
+      this.phoneNumber = '';
+    } else if (cleaned.length <= 1) {
+      this.phoneNumber = '+' + cleaned;
+    } else if (cleaned.length <= 4) {
+      this.phoneNumber = '+' + cleaned.substring(0, 1) + ' (' + cleaned.substring(1);
+    } else if (cleaned.length <= 7) {
+      this.phoneNumber = '+' + cleaned.substring(0, 1) + ' (' + cleaned.substring(1, 4) + ') ' + cleaned.substring(4);
+    } else {
+      this.phoneNumber = '+' + cleaned.substring(0, 1) + ' (' + cleaned.substring(1, 4) + ') ' + cleaned.substring(4, 7) + '-' + cleaned.substring(7, 11);
+    }
+  }
   
   validateForm(): void {
     this.formValid = 
@@ -304,8 +376,10 @@ export class Step3FormComponent implements OnInit {
       if (this.email.trim()) {
         updateData.email = this.email.trim();
       }
+      // Guardar teléfono sin formato (solo dígitos)
       if (this.phoneNumber.trim()) {
-        updateData.phoneNumber = this.phoneNumber.trim();
+        const cleanedPhone = this.phoneNumber.replace(/\D/g, '');
+        updateData.phoneNumber = cleanedPhone;
       }
       if (this.city.trim()) {
         updateData.city = this.city.trim();
