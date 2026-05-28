@@ -98,8 +98,9 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ translationService.translate('step3.county.label') }}</mat-label>
           <input matInput [formControl]="countyControl" [matAutocomplete]="countyAuto"
-            [placeholder]="translationService.translate('step3.county.placeholder')">
-          <mat-autocomplete #countyAuto="matAutocomplete" [panelWidth]="'auto'" class="county-autocomplete">
+            [placeholder]="translationService.translate('step3.county.placeholder')"
+            (blur)="onCountyBlur()">
+          <mat-autocomplete #countyAuto="matAutocomplete" [panelWidth]="'auto'" class="county-autocomplete" autoActiveFirstOption>
             <mat-option *ngFor="let location of filteredLocations | async" [value]="location.display">
               {{ location.display }}
             </mat-option>

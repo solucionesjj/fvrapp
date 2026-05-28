@@ -138,7 +138,8 @@ export class Step3FormComponent implements OnInit {
   countyOfResidence = '';
   email = '';
   phoneNumber = '';
-  
+  currentFilteredLocations: CityCounty[] = [];
+
   licenseCode = '';
   dateOfBirthObj: Date | null = null;
   firstName = '';
@@ -147,102 +148,176 @@ export class Step3FormComponent implements OnInit {
   sex = '';
   postalCode = '';
   city = '';
-  
+
   formValid = false;
-  
+
   // Lista de ciudades y condados de Florida ordenados alfabéticamente por ciudad
   floridaLocations: CityCounty[] = [
-    { city: 'Apalachicola', county: 'Franklin', display: 'Apalachicola, Franklin' },
-    { city: 'Arcadia', county: 'DeSoto', display: 'Arcadia, DeSoto' },
-    { city: 'Bartow', county: 'Polk', display: 'Bartow, Polk' },
-    { city: 'Blountstown', county: 'Calhoun', display: 'Blountstown, Calhoun' },
-    { city: 'Bonifay', county: 'Holmes', display: 'Bonifay, Holmes' },
-    { city: 'Bradenton', county: 'Manatee', display: 'Bradenton, Manatee' },
-    { city: 'Bristol', county: 'Liberty', display: 'Bristol, Liberty' },
-    { city: 'Bronson', county: 'Levy', display: 'Bronson, Levy' },
-    { city: 'Brooksville', county: 'Hernando', display: 'Brooksville, Hernando' },
-    { city: 'Bunnell', county: 'Flagler', display: 'Bunnell, Flagler' },
-    { city: 'Bushnell', county: 'Sumter', display: 'Bushnell, Sumter' },
-    { city: 'Chipley', county: 'Washington', display: 'Chipley, Washington' },
-    { city: 'Clearwater', county: 'Pinellas', display: 'Clearwater, Pinellas' },
-    { city: 'Crawfordville', county: 'Wakulla', display: 'Crawfordville, Wakulla' },
-    { city: 'Cross City', county: 'Dixie', display: 'Cross City, Dixie' },
-    { city: 'Dade City', county: 'Pasco', display: 'Dade City, Pasco' },
-    { city: 'DeFuniak Springs', county: 'Walton', display: 'DeFuniak Springs, Walton' },
-    { city: 'DeLand', county: 'Volusia', display: 'DeLand, Volusia' },
-    { city: 'Everglades City', county: 'Collier', display: 'Everglades City, Collier' },
-    { city: 'Fernandina Beach', county: 'Nassau', display: 'Fernandina Beach, Nassau' },
-    { city: 'Fort Lauderdale', county: 'Broward', display: 'Fort Lauderdale, Broward' },
-    { city: 'Fort Myers', county: 'Lee', display: 'Fort Myers, Lee' },
-    { city: 'Fort Pierce', county: 'St. Lucie', display: 'Fort Pierce, St. Lucie' },
-    { city: 'Fort Walton Beach', county: 'Okaloosa', display: 'Fort Walton Beach, Okaloosa' },
-    { city: 'Gainesville', county: 'Alachua', display: 'Gainesville, Alachua' },
-    { city: 'Green Cove Springs', county: 'Clay', display: 'Green Cove Springs, Clay' },
-    { city: 'Inverness', county: 'Citrus', display: 'Inverness, Citrus' },
-    { city: 'Jacksonville', county: 'Duval', display: 'Jacksonville, Duval' },
-    { city: 'Jasper', county: 'Hamilton', display: 'Jasper, Hamilton' },
-    { city: 'Key West', county: 'Monroe', display: 'Key West, Monroe' },
-    { city: 'Kissimmee', county: 'Osceola', display: 'Kissimmee, Osceola' },
-    { city: 'LaBelle', county: 'Hendry', display: 'LaBelle, Hendry' },
-    { city: 'Lake Butler', county: 'Union', display: 'Lake Butler, Union' },
-    { city: 'Lake City', county: 'Columbia', display: 'Lake City, Columbia' },
-    { city: 'Live Oak', county: 'Suwannee', display: 'Live Oak, Suwannee' },
-    { city: 'Macclenny', county: 'Baker', display: 'Macclenny, Baker' },
-    { city: 'Madison', county: 'Madison', display: 'Madison, Madison' },
-    { city: 'Marianna', county: 'Jackson', display: 'Marianna, Jackson' },
-    { city: 'Mayo', county: 'Lafayette', display: 'Mayo, Lafayette' },
-    { city: 'Miami', county: 'Miami-Dade', display: 'Miami, Miami-Dade' },
-    { city: 'Milton', county: 'Santa Rosa', display: 'Milton, Santa Rosa' },
-    { city: 'Monticello', county: 'Jefferson', display: 'Monticello, Jefferson' },
-    { city: 'Moore Haven', county: 'Glades', display: 'Moore Haven, Glades' },
-    { city: 'Ocala', county: 'Marion', display: 'Ocala, Marion' },
-    { city: 'Okeechobee', county: 'Okeechobee', display: 'Okeechobee, Okeechobee' },
-    { city: 'Orlando', county: 'Orange', display: 'Orlando, Orange' },
-    { city: 'Palatka', county: 'Putnam', display: 'Palatka, Putnam' },
-    { city: 'Panama City', county: 'Bay', display: 'Panama City, Bay' },
-    { city: 'Pensacola', county: 'Escambia', display: 'Pensacola, Escambia' },
-    { city: 'Perry', county: 'Taylor', display: 'Perry, Taylor' },
-    { city: 'Punta Gorda', county: 'Charlotte', display: 'Punta Gorda, Charlotte' },
-    { city: 'Quincy', county: 'Gadsden', display: 'Quincy, Gadsden' },
-    { city: 'Sanford', county: 'Seminole', display: 'Sanford, Seminole' },
-    { city: 'Sarasota', county: 'Sarasota', display: 'Sarasota, Sarasota' },
-    { city: 'Sebring', county: 'Highlands', display: 'Sebring, Highlands' },
-    { city: 'St. Augustine', county: 'St. Johns', display: 'St. Augustine, St. Johns' },
-    { city: 'Starke', county: 'Bradford', display: 'Starke, Bradford' },
-    { city: 'Stuart', county: 'Martin', display: 'Stuart, Martin' },
-    { city: 'Tallahassee', county: 'Leon', display: 'Tallahassee, Leon' },
-    { city: 'Tampa', county: 'Hillsborough', display: 'Tampa, Hillsborough' },
-    { city: 'Tavares', county: 'Lake', display: 'Tavares, Lake' },
-    { city: 'Titusville', county: 'Brevard', display: 'Titusville, Brevard' },
-    { city: 'Trenton', county: 'Gilchrist', display: 'Trenton, Gilchrist' },
-    { city: 'Vero Beach', county: 'Indian River', display: 'Vero Beach, Indian River' },
-    { city: 'Wauchula', county: 'Hardee', display: 'Wauchula, Hardee' },
-    { city: 'Palm Beach', county: 'Palm Beach', display: 'Palm Beach' },
-    { city: 'Wewahitchka', county: 'Gulf', display: 'Wewahitchka, Gulf' }
+    { city: '', county: 'Franklin', display: 'Franklin' },
+    { city: '', county: 'DeSoto', display: 'DeSoto' },
+    { city: '', county: 'Polk', display: 'Polk' },
+    { city: '', county: 'Calhoun', display: 'Calhoun' },
+    { city: '', county: 'Holmes', display: 'Holmes' },
+    { city: '', county: 'Manatee', display: 'Manatee' },
+    { city: '', county: 'Liberty', display: 'Liberty' },
+    { city: '', county: 'Levy', display: 'Levy' },
+    { city: '', county: 'Hernando', display: 'Hernando' },
+    { city: '', county: 'Flagler', display: 'Flagler' },
+    { city: '', county: 'Sumter', display: 'Sumter' },
+    { city: '', county: 'Washington', display: 'Washington' },
+    { city: '', county: 'Pinellas', display: 'Pinellas' },
+    { city: '', county: 'Wakulla', display: 'Wakulla' },
+    { city: '', county: 'Dixie', display: 'Dixie' },
+    { city: '', county: 'Pasco', display: 'Pasco' },
+    { city: '', county: 'Walton', display: 'Walton' },
+    { city: '', county: 'Volusia', display: 'Volusia' },
+    { city: '', county: 'Collier', display: 'Collier' },
+    { city: '', county: 'Nassau', display: 'Nassau' },
+    { city: '', county: 'Broward', display: 'Broward' },
+    { city: '', county: 'Lee', display: 'Lee' },
+    { city: '', county: 'St. Lucie', display: 'St. Lucie' },
+    { city: '', county: 'Okaloosa', display: 'Okaloosa' },
+    { city: '', county: 'Alachua', display: 'Alachua' },
+    { city: '', county: 'Clay', display: 'Clay' },
+    { city: '', county: 'Citrus', display: 'Citrus' },
+    { city: '', county: 'Duval', display: 'Duval' },
+    { city: '', county: 'Hamilton', display: 'Hamilton' },
+    { city: '', county: 'Monroe', display: 'Monroe' },
+    { city: '', county: 'Osceola', display: 'Osceola' },
+    { city: '', county: 'Hendry', display: 'Hendry' },
+    { city: '', county: 'Union', display: 'Union' },
+    { city: '', county: 'Columbia', display: 'Columbia' },
+    { city: '', county: 'Suwannee', display: 'Suwannee' },
+    { city: '', county: 'Baker', display: 'Baker' },
+    { city: '', county: 'Madison', display: 'Madison' },
+    { city: '', county: 'Jackson', display: 'Jackson' },
+    { city: '', county: 'Lafayette', display: 'Lafayette' },
+    { city: '', county: 'Miami-Dade', display: 'Miami-Dade' },
+    { city: '', county: 'Santa Rosa', display: 'Santa Rosa' },
+    { city: '', county: 'Jefferson', display: 'Jefferson' },
+    { city: '', county: 'Glades', display: 'Glades' },
+    { city: '', county: 'Marion', display: 'Marion' },
+    { city: '', county: 'Okeechobee', display: 'Okeechobee' },
+    { city: '', county: 'Orange', display: 'Orange' },
+    { city: '', county: 'Putnam', display: 'Putnam' },
+    { city: '', county: 'Bay', display: 'Bay' },
+    { city: '', county: 'Escambia', display: 'Escambia' },
+    { city: '', county: 'Taylor', display: 'Taylor' },
+    { city: '', county: 'Charlotte', display: 'Charlotte' },
+    { city: '', county: 'Gadsden', display: 'Gadsden' },
+    { city: '', county: 'Seminole', display: 'Seminole' },
+    { city: '', county: 'Sarasota', display: 'Sarasota' },
+    { city: '', county: 'Highlands', display: 'Highlands' },
+    { city: '', county: 'St. Johns', display: 'St. Johns' },
+    { city: '', county: 'Bradford', display: 'Bradford' },
+    { city: '', county: 'Martin', display: 'Martin' },
+    { city: '', county: 'Leon', display: 'Leon' },
+    { city: '', county: 'Hillsborough', display: 'Hillsborough' },
+    { city: '', county: 'Lake', display: 'Lake' },
+    { city: '', county: 'Brevard', display: 'Brevard' },
+    { city: '', county: 'Gilchrist', display: 'Gilchrist' },
+    { city: '', county: 'Indian River', display: 'Indian River' },
+    { city: '', county: 'Hardee', display: 'Hardee' },
+    { city: '', county: 'Palm Beach', display: 'Palm Beach' },
+    { city: '', county: 'Gulf', display: 'Gulf' }
   ];
-  
+
+
+  // floridaLocations: CityCounty[] = [
+  //   { city: 'Apalachicola', county: 'Franklin', display: 'Apalachicola, Franklin' },
+  //   { city: 'Arcadia', county: 'DeSoto', display: 'Arcadia, DeSoto' },
+  //   { city: 'Bartow', county: 'Polk', display: 'Bartow, Polk' },
+  //   { city: 'Blountstown', county: 'Calhoun', display: 'Blountstown, Calhoun' },
+  //   { city: 'Bonifay', county: 'Holmes', display: 'Bonifay, Holmes' },
+  //   { city: 'Bradenton', county: 'Manatee', display: 'Bradenton, Manatee' },
+  //   { city: 'Bristol', county: 'Liberty', display: 'Bristol, Liberty' },
+  //   { city: 'Bronson', county: 'Levy', display: 'Bronson, Levy' },
+  //   { city: 'Brooksville', county: 'Hernando', display: 'Brooksville, Hernando' },
+  //   { city: 'Bunnell', county: 'Flagler', display: 'Bunnell, Flagler' },
+  //   { city: 'Bushnell', county: 'Sumter', display: 'Bushnell, Sumter' },
+  //   { city: 'Chipley', county: 'Washington', display: 'Chipley, Washington' },
+  //   { city: 'Clearwater', county: 'Pinellas', display: 'Clearwater, Pinellas' },
+  //   { city: 'Crawfordville', county: 'Wakulla', display: 'Crawfordville, Wakulla' },
+  //   { city: 'Cross City', county: 'Dixie', display: 'Cross City, Dixie' },
+  //   { city: 'Dade City', county: 'Pasco', display: 'Dade City, Pasco' },
+  //   { city: 'DeFuniak Springs', county: 'Walton', display: 'DeFuniak Springs, Walton' },
+  //   { city: 'DeLand', county: 'Volusia', display: 'DeLand, Volusia' },
+  //   { city: 'Everglades City', county: 'Collier', display: 'Everglades City, Collier' },
+  //   { city: 'Fernandina Beach', county: 'Nassau', display: 'Fernandina Beach, Nassau' },
+  //   { city: 'Fort Lauderdale', county: 'Broward', display: 'Fort Lauderdale, Broward' },
+  //   { city: 'Fort Myers', county: 'Lee', display: 'Fort Myers, Lee' },
+  //   { city: 'Fort Pierce', county: 'St. Lucie', display: 'Fort Pierce, St. Lucie' },
+  //   { city: 'Fort Walton Beach', county: 'Okaloosa', display: 'Fort Walton Beach, Okaloosa' },
+  //   { city: 'Gainesville', county: 'Alachua', display: 'Gainesville, Alachua' },
+  //   { city: 'Green Cove Springs', county: 'Clay', display: 'Green Cove Springs, Clay' },
+  //   { city: 'Inverness', county: 'Citrus', display: 'Inverness, Citrus' },
+  //   { city: 'Jacksonville', county: 'Duval', display: 'Jacksonville, Duval' },
+  //   { city: 'Jasper', county: 'Hamilton', display: 'Jasper, Hamilton' },
+  //   { city: 'Key West', county: 'Monroe', display: 'Key West, Monroe' },
+  //   { city: 'Kissimmee', county: 'Osceola', display: 'Kissimmee, Osceola' },
+  //   { city: 'LaBelle', county: 'Hendry', display: 'LaBelle, Hendry' },
+  //   { city: 'Lake Butler', county: 'Union', display: 'Lake Butler, Union' },
+  //   { city: 'Lake City', county: 'Columbia', display: 'Lake City, Columbia' },
+  //   { city: 'Live Oak', county: 'Suwannee', display: 'Live Oak, Suwannee' },
+  //   { city: 'Macclenny', county: 'Baker', display: 'Macclenny, Baker' },
+  //   { city: 'Madison', county: 'Madison', display: 'Madison, Madison' },
+  //   { city: 'Marianna', county: 'Jackson', display: 'Marianna, Jackson' },
+  //   { city: 'Mayo', county: 'Lafayette', display: 'Mayo, Lafayette' },
+  //   { city: 'Miami', county: 'Miami-Dade', display: 'Miami, Miami-Dade' },
+  //   { city: 'Milton', county: 'Santa Rosa', display: 'Milton, Santa Rosa' },
+  //   { city: 'Monticello', county: 'Jefferson', display: 'Monticello, Jefferson' },
+  //   { city: 'Moore Haven', county: 'Glades', display: 'Moore Haven, Glades' },
+  //   { city: 'Ocala', county: 'Marion', display: 'Ocala, Marion' },
+  //   { city: 'Okeechobee', county: 'Okeechobee', display: 'Okeechobee, Okeechobee' },
+  //   { city: 'Orlando', county: 'Orange', display: 'Orlando, Orange' },
+  //   { city: 'Palatka', county: 'Putnam', display: 'Palatka, Putnam' },
+  //   { city: 'Panama City', county: 'Bay', display: 'Panama City, Bay' },
+  //   { city: 'Pensacola', county: 'Escambia', display: 'Pensacola, Escambia' },
+  //   { city: 'Perry', county: 'Taylor', display: 'Perry, Taylor' },
+  //   { city: 'Punta Gorda', county: 'Charlotte', display: 'Punta Gorda, Charlotte' },
+  //   { city: 'Quincy', county: 'Gadsden', display: 'Quincy, Gadsden' },
+  //   { city: 'Sanford', county: 'Seminole', display: 'Sanford, Seminole' },
+  //   { city: 'Sarasota', county: 'Sarasota', display: 'Sarasota, Sarasota' },
+  //   { city: 'Sebring', county: 'Highlands', display: 'Sebring, Highlands' },
+  //   { city: 'St. Augustine', county: 'St. Johns', display: 'St. Augustine, St. Johns' },
+  //   { city: 'Starke', county: 'Bradford', display: 'Starke, Bradford' },
+  //   { city: 'Stuart', county: 'Martin', display: 'Stuart, Martin' },
+  //   { city: 'Tallahassee', county: 'Leon', display: 'Tallahassee, Leon' },
+  //   { city: 'Tampa', county: 'Hillsborough', display: 'Tampa, Hillsborough' },
+  //   { city: 'Tavares', county: 'Lake', display: 'Tavares, Lake' },
+  //   { city: 'Titusville', county: 'Brevard', display: 'Titusville, Brevard' },
+  //   { city: 'Trenton', county: 'Gilchrist', display: 'Trenton, Gilchrist' },
+  //   { city: 'Vero Beach', county: 'Indian River', display: 'Vero Beach, Indian River' },
+  //   { city: 'Wauchula', county: 'Hardee', display: 'Wauchula, Hardee' },
+  //   { city: 'Palm Beach', county: 'Palm Beach', display: 'Palm Beach, Palm Beach' },
+  //   { city: 'Wewahitchka', county: 'Gulf', display: 'Wewahitchka, Gulf' }
+  // ];
   countyControl = new FormControl('');
   filteredLocations: Observable<CityCounty[]> = new Observable<CityCounty[]>();
-  
+
   constructor(
     private router: Router,
     private dataStorageService: DataStorageService,
     private dialog: MatDialog,
     public translationService: TranslationService
-  ) {}
-  
+  ) { }
+
   ngOnInit(): void {
     // Inicializar el filtro de autocompletado
     this.filteredLocations = this.countyControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterLocations(value || ''))
+      map(value => {
+        const filtered = this._filterLocations(value || '');
+        this.currentFilteredLocations = filtered;
+        return filtered;
+      })
     );
-    
+
     // Sincronizar el FormControl con el modelo
     this.countyControl.valueChanges.subscribe(value => {
       const displayStr = value || '';
       const match = this.floridaLocations.find(loc => loc.display === displayStr);
-      
+
       if (match) {
         this.countyOfResidence = match.county;
         this.city = match.city;
@@ -253,7 +328,7 @@ export class Step3FormComponent implements OnInit {
       }
       this.validateForm();
     });
-    
+
     // Cargar datos guardados si existen
     this.dataStorageService.getUserData().subscribe(userData => {
       if (userData) {
@@ -263,7 +338,7 @@ export class Step3FormComponent implements OnInit {
         this.countyOfResidence = userData.countyOfResidence;
         this.email = userData.email || '';
         this.phoneNumber = userData.phoneNumber || '';
-        
+
         // Cargar nuevos campos
         this.licenseCode = userData.licenseCode || '';
         this.firstName = userData.firstName || '';
@@ -271,7 +346,7 @@ export class Step3FormComponent implements OnInit {
         this.address = userData.address || '';
         this.postalCode = userData.postalCode || '';
         this.city = userData.city || '';
-        
+
         // Manejar el sexo
         if (userData.Sex === '1' || userData.Sex === 'M') {
           this.sex = '1';
@@ -280,43 +355,43 @@ export class Step3FormComponent implements OnInit {
         } else {
           this.sex = '';
         }
-        
+
         // Manejar la fecha de nacimiento
         if (userData.dateOfBirth) {
           if (userData.dateOfBirth.length === 8 && !userData.dateOfBirth.includes('-')) {
-             this.dateOfBirthObj = this.parseDateString(userData.dateOfBirth);
+            this.dateOfBirthObj = this.parseDateString(userData.dateOfBirth);
           } else {
-             this.dateOfBirthObj = new Date(userData.dateOfBirth);
-             if (isNaN(this.dateOfBirthObj.getTime())) {
-               this.dateOfBirthObj = null;
-             }
+            this.dateOfBirthObj = new Date(userData.dateOfBirth);
+            if (isNaN(this.dateOfBirthObj.getTime())) {
+              this.dateOfBirthObj = null;
+            }
           }
         }
-        
+
         // Buscar si existe la combinación para establecer el display correcto
         const match = this.floridaLocations.find(
-          loc => loc.county === userData.countyOfResidence && 
-                 (!userData.city || loc.city === userData.city)
+          loc => loc.county === userData.countyOfResidence &&
+            (!userData.city || loc.city === userData.city)
         );
-        
+
         if (match) {
           this.countyControl.setValue(match.display);
         } else {
           this.countyControl.setValue(userData.countyOfResidence);
         }
-        
+
         this.validateForm();
       }
     });
   }
-  
+
   private _filterLocations(value: string): CityCounty[] {
     const filterValue = value.toLowerCase();
-    return this.floridaLocations.filter(loc => 
+    return this.floridaLocations.filter(loc =>
       loc.display.toLowerCase().includes(filterValue)
     );
   }
-  
+
   private parseDateString(dateStr: string): Date | null {
     if (!dateStr || dateStr.length !== 8) return null;
     const m = parseInt(dateStr.substring(0, 2), 10) - 1;
@@ -337,13 +412,13 @@ export class Step3FormComponent implements OnInit {
   formatPhoneNumber(): void {
     // Remover todos los caracteres que no sean números
     const cleaned = this.phoneNumber.replace(/\D/g, '');
-    
+
     // Limitar a 11 dígitos (1 + 10 dígitos de teléfono US)
     if (cleaned.length > 11) {
       this.phoneNumber = cleaned.substring(0, 11);
       return;
     }
-    
+
     // Formatear: +1 (ABC) DEF-GHIJ
     if (cleaned.length === 0) {
       this.phoneNumber = '';
@@ -357,19 +432,19 @@ export class Step3FormComponent implements OnInit {
       this.phoneNumber = '+' + cleaned.substring(0, 1) + ' (' + cleaned.substring(1, 4) + ') ' + cleaned.substring(4, 7) + '-' + cleaned.substring(7, 11);
     }
   }
-  
+
   validateForm(): void {
-    this.formValid = 
-      this.question1 !== null && 
-      this.question2 !== null && 
-      this.question3 !== null && 
+    this.formValid =
+      this.question1 !== null &&
+      this.question2 !== null &&
+      this.question3 !== null &&
       this.countyOfResidence.trim().length > 0;
   }
-  
+
   goBack(): void {
     this.router.navigate(['/step2']);
   }
-  
+
   saveAndContinue(): void {
     if (this.formValid) {
       const updateData: any = {
@@ -378,7 +453,7 @@ export class Step3FormComponent implements OnInit {
         question3: !!this.question3,
         countyOfResidence: this.countyOfResidence
       };
-      
+
       // Agregar campos opcionales solo si tienen valor
       if (this.email.trim()) {
         updateData.email = this.email.trim();
@@ -391,22 +466,22 @@ export class Step3FormComponent implements OnInit {
       if (this.city.trim()) {
         updateData.city = this.city.trim();
       }
-      
+
       updateData.licenseCode = this.licenseCode;
       updateData.firstName = this.firstName;
       updateData.surnames = this.surnames;
       updateData.address = this.address;
       updateData.postalCode = this.postalCode;
       updateData.Sex = this.sex;
-      
+
       if (this.dateOfBirthObj) {
         updateData.dateOfBirth = this.formatDateString(this.dateOfBirthObj);
       } else {
         updateData.dateOfBirth = '';
       }
-      
+
       this.dataStorageService.updateUserData(updateData);
-      
+
       this.router.navigate(['/step4']);
     }
   }
@@ -426,5 +501,21 @@ export class Step3FormComponent implements OnInit {
         this.router.navigate(['/step1']);
       }
     });
+  }
+
+  onCountyBlur(): void {
+    // Esperar un momento corto para permitir que si el usuario hizo clic en una opción específica, ese evento se procese antes.
+    setTimeout(() => {
+      const value = this.countyControl.value || '';
+      const exactMatch = this.floridaLocations.some(
+        loc => loc.display.toLowerCase() === value.toLowerCase() ||
+               loc.county.toLowerCase() === value.toLowerCase()
+      );
+      
+      if (!exactMatch && this.currentFilteredLocations.length > 0) {
+        const selected = this.currentFilteredLocations[0];
+        this.countyControl.setValue(selected.display);
+      }
+    }, 200);
   }
 }

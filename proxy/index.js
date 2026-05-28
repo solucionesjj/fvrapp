@@ -63,9 +63,9 @@ app.use('/', async (req, res) => {
             throw error;
           });
         }
-        } else {
-          console.log('(MongoDB) Guardado en base de datos omitido por configuración.');
-        }
+      } else {
+        console.log('(MongoDB) Guardado en base de datos omitido por configuración.');
+      }
     } catch (error) {
       console.error('Mongo Error...', error.message);
     }
@@ -75,12 +75,21 @@ app.use('/', async (req, res) => {
     if (FORWARD_REQUEST) {
       console.log(`Forwarding request to: ${externalApiUrl}`);
 
-      const response = await axios.post(externalApiUrl, req.body, {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.API_KEY
-        }
-      });
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.API_KEY
+      };
+
+      if (req.headers.authorization) {
+        headers['Authorization'] = req.headers.authorization;
+      }
+
+      // console.log('--- Request Details ---');
+      // console.log('URL: ', externalApiUrl);
+      // console.log(`Headers: ${JSON.stringify(headers)}`);
+      // console.log(`Body: ${JSON.stringify(req.body)}`);
+
+      const response = await axios.post(externalApiUrl, req.body, { headers });
 
       res.status(response.status).json({
         proxyResponse: response.data

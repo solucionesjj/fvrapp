@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserData } from '../models/user-data.model';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,10 @@ export class DataStorageService {
   private readonly STORAGE_KEY = 'wizard_user_data';
   private userDataSubject = new BehaviorSubject<UserData | null>(null);
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {
     // Cargar datos del localStorage al iniciar el servicio
     this.loadFromLocalStorage();
   }
@@ -124,8 +128,15 @@ export class DataStorageService {
     //Se solicita retirar la limpieza de estos campos para guardar la info completa
     //userDataTemporal.signature = '';
     //userDataTemporal.barcode = '';
+
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
     const url = `${environment.apiUrl}/scans`;
-    return this.http.post(url, userDataTemporal).pipe(
+    return this.http.post(url, userDataTemporal, { headers }).pipe(
       map(() => true),
       catchError(error => {
         console.error('Error guardando en API:', error);

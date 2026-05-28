@@ -16,34 +16,25 @@
       
       
       
-      <div class="pdf-preview" *ngIf="pdfUrl">
+      <div class="pdf-preview" *ngIf="pdfUrl || pdfWithFormatUrl">
         <h3>{{ translationService.translate('step5.pdf_title') }}</h3>
         <p>{{ translationService.translate('step5.pdf_description') }}</p>
         
-        <div class="pdf-actions" >
-          <!-- <button mat-raised-button color="primary" (click)="downloadPdf()">
-            <mat-icon>download</mat-icon>
-            {{ translationService.translate('step5.download') }}
-          </button> -->
-
-          
-          <a [href]="pdfUrl" target="_blank" mat-raised-button>
+        <div class="pdf-actions">
+          <a *ngIf="pdfUrl" [href]="pdfUrl" target="_blank" mat-raised-button color="primary">
             <mat-icon>visibility</mat-icon>
-            {{ translationService.translate('step5.view') }}
+            {{ translationService.translate('step5.view_without_format') }}
           </a>
-&nbsp;&nbsp;
 
-          <a [href]="receiptPdfUrl" target="_blank" mat-raised-button>
-            <mat-icon>visibility</mat-icon>
+          <a *ngIf="pdfWithFormatUrl" [href]="pdfWithFormatUrl" target="_blank" mat-raised-button color="accent">
+            <mat-icon>picture_as_pdf</mat-icon>
+            {{ translationService.translate('step5.view_with_format') }}
+          </a>
+
+          <a *ngIf="receiptPdfUrl" [href]="receiptPdfUrl" target="_blank" mat-raised-button>
+            <mat-icon>receipt</mat-icon>
             {{ translationService.translate('step5.generate_receipt') }}
           </a>
-
-
-
-        <!-- <button mat-raised-button color="accent" (click)="generateReceiptPdf()">
-          <mat-icon>receipt</mat-icon>
-          {{ translationService.translate('step5.generate_receipt') }}
-        </button> -->
         </div>
       </div>
       

@@ -32,34 +32,34 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class Step4SummaryComponent implements OnInit {
   userData: UserData | null = null;
   isSubmitting = false;
-  
+
   constructor(
     private router: Router,
     private dataStorageService: DataStorageService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     public translationService: TranslationService
-  ) {}
-  
+  ) { }
+
   ngOnInit(): void {
     // Cargar datos guardados
     this.dataStorageService.getUserData().subscribe(userData => {
       this.userData = userData;
     });
   }
-  
+
   goBack(): void {
     this.router.navigate(['/step3']);
   }
-  
+
   submitData(): void {
     if (!this.userData) {
       this.snackBar.open('No hay datos para enviar', 'Cerrar', { duration: 3000 });
       return;
     }
-    
+
     this.isSubmitting = true;
-    
+
     // Simular envío a base de datos
     this.dataStorageService.saveToDatabase(this.userData).subscribe({
       next: (success) => {
@@ -78,13 +78,13 @@ export class Step4SummaryComponent implements OnInit {
       }
     });
   }
-  
+
   // Métodos auxiliares para mostrar datos en la interfaz
   getYesNoText(value: boolean | null | undefined): string {
     if (value === null || value === undefined) return this.translationService.translate('step4.no_answer');
     return value ? this.translationService.translate('common.yes') : this.translationService.translate('common.no');
   }
-  
+
   // Verificar si todos los datos necesarios están completos
   isDataComplete(): boolean {
     return !!this.userData &&
@@ -115,9 +115,9 @@ export class Step4SummaryComponent implements OnInit {
   }
 
   gender(gender: string) {
-    if(gender === '1') {
+    if (gender === '1') {
       return this.translationService.translate('step4.gender.male');
-    } else if(gender === '2') {
+    } else if (gender === '0') {
       return this.translationService.translate('step4.gender.female');
     } else {
       return this.translationService.translate('step4.gender.other');
@@ -125,23 +125,39 @@ export class Step4SummaryComponent implements OnInit {
   }
 
   formatDateDDMMYYYYtoDDMMMYYYY(dateStr: string) {
-  // Extraer día, mes y año
-  const month = dateStr.slice(0, 2);
-  const day = dateStr.slice(2, 4);
-  const year = dateStr.slice(4, 8);
+    // Extraer día, mes y año
+    const month = dateStr.slice(0, 2);
+    const day = dateStr.slice(2, 4);
+    const year = dateStr.slice(4, 8);
 
-  // Crear un objeto Date (meses en JavaScript van de 0 a 11)
-  const date = new Date(`${year}-${month}-${day}`);
+    // Crear un objeto Date (meses en JavaScript van de 0 a 11)
+    const date = new Date(`${year}-${month}-${day}`);
 
-  // Obtener el nombre corto del mes (ej. "Nov")
-  let shortMonth: string;
-  if(this.translationService.getCurrentLanguage() === 'es'){
-    shortMonth = date.toLocaleString('es-ES', { month: 'short' });
-  } else {
-    shortMonth = date.toLocaleString('en-US', { month: 'short' });
+    // Obtener el nombre corto del mes (ej. "Nov")
+    let shortMonth: string;
+    if (this.translationService.getCurrentLanguage() === 'es') {
+      shortMonth = date.toLocaleString('es-ES', { month: 'short' });
+    } else {
+      shortMonth = date.toLocaleString('en-US', { month: 'short' });
+    }
+
+    // Construir la fecha formateada
+    return `${shortMonth}/${day}/${year}`;
   }
 
-  // Construir la fecha formateada
-  return `${shortMonth}/${day}/${year}`;
-}
+  formatPhoneNumber(phone: string | undefined | null): string {
+    if (!phone) return '';
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length === 0) {
+      return '';
+    } else if (cleaned.length <= 1) {
+      return '+' + cleaned;
+    } else if (cleaned.length <= 4) {
+      return '+' + cleaned.substring(0, 1) + ' (' + cleaned.substring(1);
+    } else if (cleaned.length <= 7) {
+      return '+' + cleaned.substring(0, 1) + ' (' + cleaned.substring(1, 4) + ') ' + cleaned.substring(4);
+    } else {
+      return '+' + cleaned.substring(0, 1) + ' (' + cleaned.substring(1, 4) + ') ' + cleaned.substring(4, 7) + '-' + cleaned.substring(7, 11);
+    }
+  }
 }

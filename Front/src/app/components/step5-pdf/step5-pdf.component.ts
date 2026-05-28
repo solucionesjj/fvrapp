@@ -32,61 +32,75 @@ export class Step5PdfComponent implements OnInit {
   userData: UserData | null = null;
   isGeneratingPdf = false;
   pdfUrl: string | null = null;
+  pdfWithFormatUrl: string | null = null;
   receiptPdfUrl: string | null = null;
-  
+
   constructor(
     private router: Router,
     private dataStorageService: DataStorageService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     public translationService: TranslationService
-  ) {}
-  
+  ) { }
+
   ngOnInit(): void {
     // Cargar datos guardados
     this.dataStorageService.getUserData().subscribe(userData => {
       this.userData = userData;
       if (userData) {
-        // Log para diagnóstico
-        // console.log('Datos del usuario cargados:', {
-        //   hasSignature: !!userData.signature,
-        //   signatureLength: userData.signature?.length || 0,
-        //   signatureStart: userData.signature?.substring(0, 30) || 'N/A'
-        // });
-        this.generatePdf();
-        this.generateReceiptPdf();
+        this.generateAllPdfs();
       }
     });
   }
-  
-   mmToPt (mm: number) {
-    return mm * 2.83465;
-   }
 
-  
-  
-  async generatePdf(): Promise<void> {
+  async generateAllPdfs(): Promise<void> {
+    this.isGeneratingPdf = true;
+    try {
+      await this.generatePdf(false);
+      await this.generatePdf(true);
+      await this.generateReceiptPdf();
+    } catch (error) {
+      console.error('Error al generar los PDFs:', error);
+    } finally {
+      this.isGeneratingPdf = false;
+    }
+  }
+
+  mmToPt(mm: number) {
+    return mm * 2.83465;
+  }
+
+
+
+  async generatePdf(withFormat: boolean = false): Promise<void> {
     if (!this.userData) {
       this.snackBar.open(this.translationService.translate('step5.error'), this.translationService.translate('common.close'), { duration: 3000 });
       return;
     }
-    
-    this.isGeneratingPdf = true;
-    
+
     try {
-      // Crear un nuevo documento PDF
-      const pdfDoc = await PDFDocument.create();
-      
-      // Agregar una página
-      // const page = pdfDoc.addPage([600, 800]);
-      const page = pdfDoc.addPage(PageSizes.Letter);
-      
-      
+      let pdfDoc;
+      let page;
+
+      if (withFormat) {
+        const existingPdfBytes = await fetch('/voter_registration_form.pdf').then(res => res.arrayBuffer());
+        pdfDoc = await PDFDocument.load(existingPdfBytes);
+        page = pdfDoc.getPages()[0];
+      } else {
+        // Crear un nuevo documento PDF
+        pdfDoc = await PDFDocument.create();
+
+        // Agregar una página
+        // const page = pdfDoc.addPage([600, 800]);
+        page = pdfDoc.addPage(PageSizes.Letter);
+      }
+
+
       // Obtener la fuente estándar
       const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
       // const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
       const boldFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      
+
       // Configurar tamaños de fuente
       const titleSize = 20;
       const subtitleSize = 14;
@@ -132,73 +146,73 @@ export class Step5PdfComponent implements OnInit {
 
       let line4 = this.mmToPt(127); //Date of brith and license number
       let line5 = this.mmToPt(117); //Surnames Names and Name Suffix
-      let line6 = this.mmToPt(109); //Address, City, County, Postal Code
-      let line9 = this.mmToPt(85); //Gender
-      let line10 = this.mmToPt(76); //Phone Number and Email
+      let line6 = this.mmToPt(108); //Address, City, County, Postal Code
+      let line9 = this.mmToPt(82); //Gender
+      let line10 = this.mmToPt(74); //Phone Number and Email
 
       let printPhoneNumber = true;
       let printEmail = true;
 
 
 
-      
+
       // Print Date of Birth
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(0, 1)), {
         x: this.mmToPt(20),
-        y:  line4 ,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(1, 2)), {
         x: this.mmToPt(26),
-        y:  line4 ,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(2, 3)), {
         x: this.mmToPt(34),
-        y:  line4 ,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(3, 4)), {
         x: this.mmToPt(39),
-        y:  line4 ,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(4, 5)), {
         x: this.mmToPt(47),
-        y:  line4 ,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(5, 6)), {
         x: this.mmToPt(53),
-        y:  line4 ,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(6, 7)), {
         x: this.mmToPt(58),
-        y:  line4 ,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
       page.drawText(this.sanitizeTextForPdf(this.userData.dateOfBirth.substring(7, 8)), {
         x: this.mmToPt(64),
-        y:  line4 ,
+        y: line4,
         size: subtitleSize,
         font: boldFont,
         color: rgb(0, 0, 0)
-      });      
+      });
 
       // Print Florida Driver License
       page.drawText(this.sanitizeTextForPdf(this.userData.licenseCode.substring(0, 1)), {
@@ -297,17 +311,17 @@ export class Step5PdfComponent implements OnInit {
       // Print Surnames
       page.drawText(this.sanitizeTextForPdf(this.userData.surnames), {
         x: this.mmToPt(20),
-        y:  line5,
+        y: line5,
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
       });
 
       // Print Names
-      if(this.userData.firstName == 'NONE') {
+      if (this.userData.firstName == 'NONE') {
         this.userData.firstName = '';
       }
-      if(this.userData.secondName == 'NONE') {
+      if (this.userData.secondName == 'NONE') {
         this.userData.secondName = '';
       }
 
@@ -317,8 +331,8 @@ export class Step5PdfComponent implements OnInit {
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
-      });     
-      
+      });
+
       // Print Name Suffix
       // if(this.userData.Sex === '1' || this.userData.Sex === '2') {
       //   page.drawText(this.sanitizeTextForPdf(this.userData.Sex === '1' ? 'MR.' : 'MS.'), {
@@ -329,7 +343,7 @@ export class Step5PdfComponent implements OnInit {
       //     color: rgb(0, 0, 0)
       //   });     
       //  }
-       
+
       // Print Address
       page.drawText(this.sanitizeTextForPdf(this.userData.address), {
         x: this.mmToPt(20),
@@ -337,7 +351,7 @@ export class Step5PdfComponent implements OnInit {
         size: normalSize,
         font: boldFont,
         color: rgb(0, 0, 0)
-      });    
+      });
       // Print City
       page.drawText(this.sanitizeTextForPdf(this.userData.city), {
         x: this.mmToPt(131),
@@ -346,7 +360,7 @@ export class Step5PdfComponent implements OnInit {
         size: 9,
         font: boldFont,
         color: rgb(0, 0, 0)
-      });    
+      });
       // Print County
       page.drawText(this.sanitizeTextForPdf(this.userData.countyOfResidence), {
         x: this.mmToPt(159),
@@ -358,7 +372,7 @@ export class Step5PdfComponent implements OnInit {
         color: rgb(0, 0, 0)
       });
       // Print Postal Code
-      this.userData.postalCode = this.userData.postalCode.replace(/0000$/, "");  
+      this.userData.postalCode = this.userData.postalCode.replace(/0000$/, "");
       page.drawText(this.sanitizeTextForPdf(this.userData.postalCode), {
         x: this.mmToPt(184),
         y: line6,
@@ -366,12 +380,12 @@ export class Step5PdfComponent implements OnInit {
         size: 9,
         font: boldFont,
         color: rgb(0, 0, 0)
-      });   
+      });
 
       // Print X on US Sex
-      if(this.userData.Sex === '1' || this.userData.Sex === '2') {
+      if (this.userData.Sex === '1' || this.userData.Sex === '2') {
         var temporalX = 0;
-        if(this.userData.Sex === '1') {
+        if (this.userData.Sex === '1') {
           temporalX = this.mmToPt(157);
         } else {
           temporalX = this.mmToPt(148);
@@ -381,47 +395,47 @@ export class Step5PdfComponent implements OnInit {
           y: line9,
           size: subtitleSize,
           font: boldFont,
-        color: rgb(0, 0, 0)
-      });
-    }
+          color: rgb(0, 0, 0)
+        });
+      }
 
-    // Print Phone Number
-    if(printPhoneNumber) {
-      page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber.substring(0, 3)), {
-        x: this.mmToPt(20),
-        y: line10,
-        size: subtitleSize,
-        font: boldFont,
-      color: rgb(0, 0, 0)
-      });
-    }
+      // Print Phone Number
+      if (printPhoneNumber) {
+        page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber.substring(0, 3)), {
+          x: this.mmToPt(20),
+          y: line10,
+          size: subtitleSize,
+          font: boldFont,
+          color: rgb(0, 0, 0)
+        });
+      }
 
-    if(printPhoneNumber) {
-      page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber.substring(3, this.userData.phoneNumber.length)), {
-        x: this.mmToPt(30),
-        y: line10,
-        size: subtitleSize,
-        font: boldFont,
-      color: rgb(0, 0, 0)
-      });
-    }
+      if (printPhoneNumber) {
+        page.drawText(this.sanitizeTextForPdf(this.userData.phoneNumber.substring(3, this.userData.phoneNumber.length)), {
+          x: this.mmToPt(30),
+          y: line10,
+          size: subtitleSize,
+          font: boldFont,
+          color: rgb(0, 0, 0)
+        });
+      }
 
-    if(printEmail) {
-    // Print Email
-    page.drawText(this.sanitizeTextForPdf(this.userData.email), {
+      if (printEmail) {
+        // Print Email
+        page.drawText(this.sanitizeTextForPdf(this.userData.email), {
           x: this.mmToPt(90),
           y: line10,
           size: subtitleSize,
           font: boldFont,
-        color: rgb(0, 0, 0)
-      });
-    }
+          color: rgb(0, 0, 0)
+        });
+      }
 
-      
+
       // // Agregar firma
       // if (this.userData.signature && this.userData.signature.trim() !== '') {
       //   console.log('Procesando firma:', this.userData.signature.substring(0, 50) + '...');
-        
+
       //   try {
       //     // Validar que la firma no sea una imagen vacía
       //     if (this.isEmptySignature(this.userData.signature)) {
@@ -429,12 +443,12 @@ export class Step5PdfComponent implements OnInit {
       //     } else {
       //       // Convertir la firma base64 a una imagen para el PDF
       //       const signatureImage = await this.getImageFromBase64(this.userData.signature);
-            
+
       //       // Crear una imagen temporal para validar que se puede cargar
       //       await this.validateImageData(signatureImage);
-            
+
       //       const signatureBytes = await this.fetchWithRetry(signatureImage, 3);
-            
+
       //       let signatureEmbed;
       //       try {
       //         // Intentar primero como PNG
@@ -444,17 +458,17 @@ export class Step5PdfComponent implements OnInit {
       //         // Si falla PNG, intentar como JPEG
       //         signatureEmbed = await pdfDoc.embedJpg(signatureBytes);
       //       }
-            
+
       //       // Calcular dimensiones para mantener la proporción
       //       const dimensions = signatureEmbed.scale(0.18);
-            
+
       //       page.drawImage(signatureEmbed, {
       //         x: 85,
       //         y: 14,
       //         width: dimensions.width,
       //         height: dimensions.height
       //       });
-            
+
       //       console.log('Firma agregada exitosamente al PDF');
       //     }
       //   } catch (error) {
@@ -504,27 +518,28 @@ export class Step5PdfComponent implements OnInit {
       //       font,
       //       color: rgb(0, 0, 0)
       //     });          
-      
+
       // Serializar el PDF a bytes
       const pdfBytes = await pdfDoc.save();
       const bytes = new Uint8Array(pdfBytes.length);
       bytes.set(pdfBytes);
       const blob = new Blob([bytes.buffer], { type: 'application/pdf' });
-      this.pdfUrl = URL.createObjectURL(blob);
-      
-      this.isGeneratingPdf = false;
+      if (withFormat) {
+        this.pdfWithFormatUrl = URL.createObjectURL(blob);
+      } else {
+        this.pdfUrl = URL.createObjectURL(blob);
+      }
     } catch (error) {
       console.error('Error al generar el PDF:', error);
       this.snackBar.open(this.translationService.translate('step5.error'), this.translationService.translate('common.close'), { duration: 3000 });
-      this.isGeneratingPdf = false;
     }
   }
-  
-  
+
+
   // Método para limpiar texto y evitar errores de codificación WinAnsi
   private sanitizeTextForPdf(text: string): string {
     if (!text) return '';
-    
+
     // Reemplazar caracteres problemáticos con equivalentes seguros
     return text
       .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Eliminar caracteres de control
@@ -558,21 +573,20 @@ export class Step5PdfComponent implements OnInit {
       this.snackBar.open(this.translationService.translate('step5.error'), this.translationService.translate('common.close'), { duration: 3000 });
       return;
     }
-    this.isGeneratingPdf = true;
     try {
 
       const titleSize = 20;
       const subtitleSize = 14;
       const normalSize = 11;
 
-      if(this.userData.firstName == 'NONE') {
+      if (this.userData.firstName == 'NONE') {
         this.userData.firstName = '';
       }
-      if(this.userData.secondName == 'NONE') {
+      if (this.userData.secondName == 'NONE') {
         this.userData.secondName = '';
       }
 
-      const applicantName = this.sanitizeTextForPdf(((this.userData.firstName || '') + ' ' + (this.userData.secondName || '')+ ' ' +(this.userData.surnames || '')).trim());
+      const applicantName = this.sanitizeTextForPdf(((this.userData.firstName || '') + ' ' + (this.userData.secondName || '') + ' ' + (this.userData.surnames || '')).trim());
       const county = this.sanitizeTextForPdf(this.userData.countyOfResidence || '');
       const collectedDate = this.userData.updatedAt ? new Date(this.userData.updatedAt) : new Date();
       const dateFormatted = this.formatDateYyyyMmmDd(collectedDate);
@@ -583,14 +597,14 @@ export class Step5PdfComponent implements OnInit {
       const text04 = this.sanitizeTextForPdf('TO SUBMIT TO MY SUPERVISOR OF ELECTIONS OR THE DIVISION OF ELECTIONS');
       const text05 = this.sanitizeTextForPdf('SO THAT I WILL BE REGISTERED TO VOTE*');
       const text06 = this.sanitizeTextForPdf('I can check my registration status at: registration.elections.myflorida.com/CheckVoterStatus');
-     
+
       const text07 = this.sanitizeTextForPdf('APPLICANT\'s NAME: ');
       const text08 = this.sanitizeTextForPdf('APPLICANT\'s PARTY AFFILIATION: ');
       const text09 = this.sanitizeTextForPdf('APPLICANT\'S COUNTY OF RESIDENCE: ');
       const text10 = this.sanitizeTextForPdf('DATE APPLICATION COLLECTED: ');
       const text11 = this.sanitizeTextForPdf('3PVRO ID #: ');
       const text12 = this.sanitizeTextForPdf('REGISTRATION AGENT / PERSON WHO COLLECTED APPLICATION: ');
-     
+
       const text13A = this.sanitizeTextForPdf('DS-DE 129 (eff. 09/26/2023)');
       const text13B = this.sanitizeTextForPdf('Rule 1S-2.042, F.A.C.');
 
@@ -610,145 +624,145 @@ export class Step5PdfComponent implements OnInit {
 
       var texty = this.mmToPt(253);
       var lineHeight = this.mmToPt(7);
-      page.drawText(text01, {x: text01x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text01, { x: text01x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
-      page.drawText(text02, {x: text02x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text02, { x: text02x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight - lineHeight;
-      page.drawText(text03, {x: text03x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text03, { x: text03x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
-      page.drawText(text04, {x: text04x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text04, { x: text04x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
-      page.drawText(text05, {x: text05x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text05, { x: text05x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
-      page.drawText(text06, {x: text06x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text06, { x: text06x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
 
       var x = this.mmToPt(20);
-      var xfin = pageWidth - this.mmToPt(0);  
+      var xfin = pageWidth - this.mmToPt(0);
       texty = texty - lineHeight - lineHeight;
-      page.drawText(text07, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(4);
-      page.drawText(applicantName, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text07, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+      x = this.mmToPt(20) + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(4);
+      page.drawText(applicantName, { x: x, y: texty + 2, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
 
 
 
 
 
-
-      
-      x = this.mmToPt(20);
-      texty = texty - lineHeight;
-      page.drawText(text08, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text08, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-     
-      x = this.mmToPt(20);
-      texty = texty - lineHeight;
-      page.drawText(text09, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(4);
-      page.drawText(county, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-     
-
-      x = this.mmToPt(20);
-      texty = texty - lineHeight;
-      page.drawText(text10, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(4);
-      page.drawText(dateFormatted, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
 
 
       x = this.mmToPt(20);
       texty = texty - lineHeight;
-      page.drawText(text11, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text11, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-     
+      page.drawText(text08, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text08, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
 
       x = this.mmToPt(20);
       texty = texty - lineHeight;
-      page.drawText(text12, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text12, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-     
+      page.drawText(text09, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+      x = this.mmToPt(20) + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(4);
+      page.drawText(county, { x: x, y: texty + 2, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+
 
       x = this.mmToPt(20);
       texty = texty - lineHeight;
-      page.drawText(text13A, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text10, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+      x = this.mmToPt(20) + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(4);
+      page.drawText(dateFormatted, { x: x, y: texty + 2, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text11, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text11, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text12, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text12, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text13A, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       x = pageWidth - this.mmToPt(20) - boldFont.widthOfTextAtSize(text13B, normalSize);
-      page.drawText(text13B, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text13B, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
       x = this.mmToPt(0);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin, y: texty },thickness: 0.5,color: rgb(0, 0, 0),opacity: 0.50,});
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin, y: texty }, thickness: 0.5, color: rgb(0, 0, 0), opacity: 0.50, });
 
       texty = texty - lineHeight - lineHeight - lineHeight - lineHeight;
-      page.drawText(text01, {x: text01x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text01, { x: text01x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
-      page.drawText(text02, {x: text02x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text02, { x: text02x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight - lineHeight;
-      page.drawText(text03, {x: text03x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text03, { x: text03x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
-      page.drawText(text04, {x: text04x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text04, { x: text04x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
-      page.drawText(text05, {x: text05x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text05, { x: text05x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       texty = texty - lineHeight;
-      page.drawText(text06, {x: text06x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text06, { x: text06x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
 
       var x = this.mmToPt(20);
-      var xfin = pageWidth - this.mmToPt(0);  
+      var xfin = pageWidth - this.mmToPt(0);
       texty = texty - lineHeight - lineHeight;
-      page.drawText(text07, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(4);
-      page.drawText(applicantName, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text07, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+      x = this.mmToPt(20) + boldFont.widthOfTextAtSize(text07, normalSize) + this.mmToPt(4);
+      page.drawText(applicantName, { x: x, y: texty + 2, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
 
 
 
       x = this.mmToPt(20);
       texty = texty - lineHeight;
-      page.drawText(text08, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text08, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-     
-      x = this.mmToPt(20);
-      texty = texty - lineHeight;
-      page.drawText(text09, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(4);
-      page.drawText(county, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text08, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text08, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
 
       x = this.mmToPt(20);
       texty = texty - lineHeight;
-      page.drawText(text10, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-      x =  this.mmToPt(20) + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(4);
-      page.drawText(dateFormatted, {x: x,y: texty + 2,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text09, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+      x = this.mmToPt(20) + boldFont.widthOfTextAtSize(text09, normalSize) + this.mmToPt(4);
+      page.drawText(county, { x: x, y: texty + 2, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
 
       x = this.mmToPt(20);
       texty = texty - lineHeight;
-      page.drawText(text11, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text11, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-     
+      page.drawText(text10, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+      x = this.mmToPt(20) + boldFont.widthOfTextAtSize(text10, normalSize) + this.mmToPt(4);
+      page.drawText(dateFormatted, { x: x, y: texty + 2, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
 
       x = this.mmToPt(20);
       texty = texty - lineHeight;
-      page.drawText(text12, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
-      x =  x + boldFont.widthOfTextAtSize(text12, normalSize) + this.mmToPt(2);
-      page.drawLine({start: { x: x, y: texty },end: { x: xfin - this.mmToPt(20), y: texty },thickness: 1,color: rgb(0, 0, 0),opacity: 0.75,});
-     
+      page.drawText(text11, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text11, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+
 
       x = this.mmToPt(20);
       texty = texty - lineHeight;
-      page.drawText(text13A, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text12, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
+      x = x + boldFont.widthOfTextAtSize(text12, normalSize) + this.mmToPt(2);
+      page.drawLine({ start: { x: x, y: texty }, end: { x: xfin - this.mmToPt(20), y: texty }, thickness: 1, color: rgb(0, 0, 0), opacity: 0.75, });
+
+
+      x = this.mmToPt(20);
+      texty = texty - lineHeight;
+      page.drawText(text13A, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
       x = pageWidth - this.mmToPt(20) - boldFont.widthOfTextAtSize(text13B, normalSize);
-      page.drawText(text13B, {x: x,y: texty,size: normalSize,font: boldFont,color: rgb(0, 0, 0)});
+      page.drawText(text13B, { x: x, y: texty, size: normalSize, font: boldFont, color: rgb(0, 0, 0) });
 
 
 
@@ -771,10 +785,8 @@ export class Step5PdfComponent implements OnInit {
       bytes.set(pdfBytes);
       const blob = new Blob([bytes.buffer], { type: 'application/pdf' });
       this.receiptPdfUrl = URL.createObjectURL(blob);
-      this.isGeneratingPdf = false;
     } catch (error) {
       this.snackBar.open(this.translationService.translate('step5.error'), this.translationService.translate('common.close'), { duration: 3000 });
-      this.isGeneratingPdf = false;
     }
   }
 
@@ -795,21 +807,21 @@ export class Step5PdfComponent implements OnInit {
           resolve(base64String);
           return;
         }
-        
+
         // Limpiar la cadena base64 de posibles caracteres problemáticos
         let cleanBase64 = base64String.trim();
-        
+
         // Si contiene coma, tomar solo la parte después de la coma
         if (cleanBase64.includes(',')) {
           cleanBase64 = cleanBase64.split(',')[1];
         }
-        
+
         // Validar que la cadena base64 sea válida
         if (!cleanBase64 || cleanBase64.length === 0) {
           reject(new Error('Cadena base64 vacía'));
           return;
         }
-        
+
         // Verificar que sea una cadena base64 válida
         try {
           atob(cleanBase64);
@@ -817,11 +829,11 @@ export class Step5PdfComponent implements OnInit {
           reject(new Error('Cadena base64 inválida'));
           return;
         }
-        
+
         // Crear la URL de datos
         const dataUrl = `data:image/png;base64,${cleanBase64}`;
         resolve(dataUrl);
-        
+
       } catch (error) {
         reject(new Error(`Error al procesar base64: ${error}`));
       }
@@ -833,14 +845,14 @@ export class Step5PdfComponent implements OnInit {
     if (!signature || signature.trim() === '') {
       return true;
     }
-    
+
     // Verificar si es la imagen vacía por defecto de SignaturePad
     const emptySignatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC';
-    
+
     if (signature === emptySignatureData) {
       return true;
     }
-    
+
     // Verificar si la imagen es muy pequeña (probablemente vacía)
     try {
       const base64Data = signature.split(',')[1] || signature;
@@ -851,76 +863,76 @@ export class Step5PdfComponent implements OnInit {
       console.warn('Error al validar firma:', error);
       return true;
     }
-    
+
     return false;
   }
 
   // Método para validar que los datos de imagen son válidos
-   private validateImageData(dataUrl: string): Promise<void> {
-     return new Promise((resolve, reject) => {
-       const img = new Image();
-       
-       img.onload = () => {
-         // Verificar que la imagen tiene dimensiones válidas
-         if (img.width > 0 && img.height > 0) {
-           resolve();
-         } else {
-           reject(new Error('Imagen con dimensiones inválidas'));
-         }
-       };
-       
-       img.onerror = () => {
-         reject(new Error('No se pudo cargar la imagen'));
-       };
-       
-       // Establecer timeout para evitar esperas indefinidas
-       setTimeout(() => {
-         reject(new Error('Timeout al validar imagen'));
-       }, 5000);
-       
-       img.src = dataUrl;
-     });
-   }
+  private validateImageData(dataUrl: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
 
-   // Método para hacer fetch con reintentos
-    private async fetchWithRetry(url: string, maxRetries: number): Promise<ArrayBuffer> {
-      let lastError: Error = new Error('Error desconocido');
-     
-     for (let attempt = 1; attempt <= maxRetries; attempt++) {
-       try {
-         console.log(`Intento ${attempt} de ${maxRetries} para cargar imagen`);
-         
-         const response = await fetch(url);
-         
-         if (!response.ok) {
-           throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
-         }
-         
-         const arrayBuffer = await response.arrayBuffer();
-         
-         if (arrayBuffer.byteLength === 0) {
-           throw new Error('Respuesta vacía del servidor');
-         }
-         
-         console.log(`Imagen cargada exitosamente en intento ${attempt}`);
-         return arrayBuffer;
-         
-       } catch (error) {
-         lastError = error as Error;
-         console.warn(`Intento ${attempt} falló:`, error);
-         
-         // Si no es el último intento, esperar antes de reintentar
-         if (attempt < maxRetries) {
-           const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Backoff exponencial
-           console.log(`Esperando ${delay}ms antes del siguiente intento...`);
-           await new Promise(resolve => setTimeout(resolve, delay));
-         }
-       }
-     }
-     
-     throw new Error(`Falló después de ${maxRetries} intentos. Último error: ${lastError.message}`);
-   }
-  
+      img.onload = () => {
+        // Verificar que la imagen tiene dimensiones válidas
+        if (img.width > 0 && img.height > 0) {
+          resolve();
+        } else {
+          reject(new Error('Imagen con dimensiones inválidas'));
+        }
+      };
+
+      img.onerror = () => {
+        reject(new Error('No se pudo cargar la imagen'));
+      };
+
+      // Establecer timeout para evitar esperas indefinidas
+      setTimeout(() => {
+        reject(new Error('Timeout al validar imagen'));
+      }, 5000);
+
+      img.src = dataUrl;
+    });
+  }
+
+  // Método para hacer fetch con reintentos
+  private async fetchWithRetry(url: string, maxRetries: number): Promise<ArrayBuffer> {
+    let lastError: Error = new Error('Error desconocido');
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`Intento ${attempt} de ${maxRetries} para cargar imagen`);
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+
+        if (arrayBuffer.byteLength === 0) {
+          throw new Error('Respuesta vacía del servidor');
+        }
+
+        console.log(`Imagen cargada exitosamente en intento ${attempt}`);
+        return arrayBuffer;
+
+      } catch (error) {
+        lastError = error as Error;
+        console.warn(`Intento ${attempt} falló:`, error);
+
+        // Si no es el último intento, esperar antes de reintentar
+        if (attempt < maxRetries) {
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Backoff exponencial
+          console.log(`Esperando ${delay}ms antes del siguiente intento...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+
+    throw new Error(`Falló después de ${maxRetries} intentos. Último error: ${lastError.message}`);
+  }
+
   downloadPdf(): void {
     if (this.pdfUrl) {
       const link = document.createElement('a');
@@ -929,7 +941,7 @@ export class Step5PdfComponent implements OnInit {
       link.click();
     }
   }
-  
+
   confirmRestart(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',

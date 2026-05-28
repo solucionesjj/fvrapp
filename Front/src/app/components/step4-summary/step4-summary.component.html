@@ -4,11 +4,11 @@
       <mat-card-title>{{ translationService.translate('step4.title') }}</mat-card-title>
       <mat-card-subtitle>{{ translationService.translate('step4.subtitle') }}</mat-card-subtitle>
     </mat-card-header>
-    
+
     <mat-card-content *ngIf="userData">
 
-            <!-- <mat-divider></mat-divider> -->
-      
+      <!-- <mat-divider></mat-divider> -->
+
       <div class="section">
         <!-- <h3>{{ translationService.translate('step4.form_section') }}</h3> -->
         <div class="form-answers">
@@ -27,7 +27,8 @@
             </tr> -->
             <tr>
               <td>{{ translationService.translate('step4.county_label') }}</td>
-              <td class="grayText"><strong> {{ userData.countyOfResidence || translationService.translate('step4.not_specified') }}</strong></td>
+              <td class="grayText"><strong> {{ userData.countyOfResidence ||
+                  translationService.translate('step4.not_specified') }}</strong></td>
             </tr>
             <tr>
               <td>{{ translationService.translate('step4.name') }}</td>
@@ -43,12 +44,12 @@
             </tr>
             <tr>
               <td>{{ translationService.translate('step4.gender') }}</td>
-              <td class="grayText"><strong> {{ gender(userData.Sex) }}</strong></td>  
+              <td class="grayText"><strong> {{ gender(userData.Sex) }}</strong></td>
             </tr>
-            <tr>
+            <!-- <tr>
               <td>{{ translationService.translate('step4.city') }}</td>
               <td class="grayText"><strong> {{ userData.city }}</strong></td>
-            </tr>
+            </tr> -->
             <tr>
               <td>{{ translationService.translate('step4.county') }}</td>
               <td class="grayText"><strong> {{ userData.countyOfResidence }}</strong></td>
@@ -67,8 +68,8 @@
             </tr>
             <tr>
               <td>{{ translationService.translate('step4.phoneNumber') }}</td>
-              <td class="grayText"><strong> {{ userData.phoneNumber }}</strong></td>
-            </tr>                        
+              <td class="grayText"><strong> {{ formatPhoneNumber(userData.phoneNumber) }}</strong></td>
+            </tr>
             <tr>
               <td>{{ translationService.translate('step4.driverLicense') }}</td>
               <td class="grayText"><strong> {{ userData.licenseCode }}</strong></td>
@@ -79,36 +80,37 @@
             </tr>
             <tr>
               <td>{{ translationService.translate('step4.signature_label') }}</td>
-              <td><div class="signature-preview" *ngIf="userData.signature">
-                <img [src]="userData.signature"  alt="{{ translationService.translate('step4.signature_label') }}">
-              </div>     
-            </td>
-            </tr>                                                
+              <td>
+                <div class="signature-preview" *ngIf="userData.signature">
+                  <img [src]="userData.signature" alt="{{ translationService.translate('step4.signature_label') }}">
+                </div>
+              </td>
+            </tr>
           </table>
         </div>
       </div>
 
 
-      
+
       <!-- <mat-divider></mat-divider> -->
-      
 
-      
 
-      
+
+
+
       <div *ngIf="!isDataComplete()" class="warning-message">
         <p>{{ translationService.translate('step4.incomplete_warning') }}</p>
       </div>
     </mat-card-content>
-    
+
     <mat-card-content *ngIf="!userData">
       <div class="no-data-message">
         <p>{{ translationService.translate('step4.no_data') }}</p>
       </div>
     </mat-card-content>
-    
+
     <mat-progress-bar *ngIf="isSubmitting" mode="indeterminate"></mat-progress-bar>
-    
+
     <mat-card-actions class="main-actions">
       <button mat-button [disabled]="isSubmitting" (click)="goBack()">
         {{ translationService.translate('nav.previous') }}
@@ -118,7 +120,7 @@
         {{ translationService.translate('step4.generate_pdf') }}
       </button>
     </mat-card-actions>
-    
+
     <mat-card-actions class="restart-action">
       <button mat-raised-button color="warn" (click)="confirmRestart()">
         <mat-icon>refresh</mat-icon>
