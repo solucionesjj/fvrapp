@@ -143,6 +143,7 @@ export class Step3FormComponent implements OnInit {
   licenseCode = '';
   dateOfBirthObj: Date | null = null;
   firstName = '';
+  secondName = '';
   surnames = '';
   address = '';
   sex = '';
@@ -342,6 +343,7 @@ export class Step3FormComponent implements OnInit {
         // Cargar nuevos campos
         this.licenseCode = userData.licenseCode || '';
         this.firstName = userData.firstName || '';
+        this.secondName = userData.secondName || '';
         this.surnames = userData.surnames || '';
         this.address = userData.address || '';
         this.postalCode = userData.postalCode || '';
@@ -469,6 +471,7 @@ export class Step3FormComponent implements OnInit {
 
       updateData.licenseCode = this.licenseCode;
       updateData.firstName = this.firstName;
+      updateData.secondName = this.secondName;
       updateData.surnames = this.surnames;
       updateData.address = this.address;
       updateData.postalCode = this.postalCode;

@@ -32,7 +32,7 @@
             </tr>
             <tr>
               <td>{{ translationService.translate('step4.name') }}</td>
-              <td class="grayText"><strong> {{ userData.firstName + ' ' +userData.secondName}}</strong></td>
+              <td class="grayText"><strong> {{ (userData.firstName + ' ' + (userData.secondName || '')).trim() }}</strong></td>
             </tr>
             <tr>
               <td>{{ translationService.translate('step4.surnames') }}</td>

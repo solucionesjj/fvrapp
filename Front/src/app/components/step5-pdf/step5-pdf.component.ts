@@ -325,8 +325,17 @@ export class Step5PdfComponent implements OnInit {
         this.userData.secondName = '';
       }
 
-      page.drawText(this.sanitizeTextForPdf(this.userData.firstName + ' ' + this.userData.secondName), {
+      page.drawText(this.sanitizeTextForPdf(this.userData.firstName), {
         x: this.mmToPt(90),
+        y: line5,
+        size: normalSize,
+        font: boldFont,
+        color: rgb(0, 0, 0)
+      });
+
+
+      page.drawText(this.sanitizeTextForPdf(this.userData.secondName), {
+        x: this.mmToPt(149),
         y: line5,
         size: normalSize,
         font: boldFont,

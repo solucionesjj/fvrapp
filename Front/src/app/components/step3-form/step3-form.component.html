@@ -53,6 +53,13 @@
 
           <mat-form-field appearance="outline" class="half-width">
             <mat-label>
+              {{ translationService.translate('step3.secondName.title') }}
+            </mat-label>
+            <input matInput [(ngModel)]="secondName" placeholder="Middle Name">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>
               {{ translationService.translate('step3.surnames.title') }}
             </mat-label>
             <input matInput [(ngModel)]="surnames" placeholder="Surnames">
